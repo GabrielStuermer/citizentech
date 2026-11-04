@@ -50,7 +50,7 @@ Quanto maior esse número, mais tempo o morador tem para levar seus bens para o 
 
 ```
 ├── README.md              # este arquivo (começa com a Ficha da CitizenTech)
-├── PROMPTS.md             # todos os prompts usados, em ordem
+├── CHANGELOG.md           # o que foi entregue em cada etapa
 ├── INTEGRANTES.md         # nome e RM
 ├── dados/                 # núcleo de dados compartilhado
 │   ├── niveis_simulados.csv
@@ -115,10 +115,6 @@ Se mudar esses valores, mantenha em sincronia as constantes do ESP32 em `edge/sr
 ## Histórico das etapas
 
 O que foi entregue em cada etapa, com como testar e pendências: [CHANGELOG.md](CHANGELOG.md).
-
-## Uso de IA
-
-Este projeto usou IA como copiloto. Veja [PROMPTS.md](PROMPTS.md) (todos os prompts, em ordem).
 
 ## Integrantes
 

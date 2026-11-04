@@ -32,7 +32,6 @@ npm-debug.log*
 
 # ----- Editor e sistema operacional -----
 .vscode/
-.claude/settings.local.json
 Thumbs.db
 desktop.ini
 .DS_Store

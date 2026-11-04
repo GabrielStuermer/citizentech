@@ -68,7 +68,7 @@ Resultados esperados:
 - Criei o `.gitignore`, que já bloqueia `edge/src/secrets.h` (credenciais), `.pio/`, `node_modules/` e caches do Python.
 - Escrevi o `README.md` com a Ficha da CitizenTech: problema, cidadão, indicador de impacto, ODS 11/13/9/3 e o que cada parte faz.
 - Documentei o **contrato de dados**: `{ timestamp, nivel_cm, estacao }`.
-- Criei `AI.md` (declaração de uso de IA), `PROMPTS.md` (prompts na íntegra e em ordem) e `INTEGRANTES.md`.
+- Criei o `INTEGRANTES.md`.
 - Criei `python/src/gerar_dados.py`, que gera a série **simulada** usando só a biblioteca padrão do Python e uma semente fixa.
 - Gerei `dados/niveis_simulados.csv`: 204 leituras a cada 10 min, em quatro fases (normal, subida lenta, subida rápida e estabilização).
 - Criei `dados/config_alertas.json` com as faixas Normal (0), Atenção (150), Alerta (200) e Crítico (250 cm). São valores **provisórios, a validar com fonte pública**.
