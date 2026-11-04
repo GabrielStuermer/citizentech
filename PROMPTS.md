@@ -6,6 +6,7 @@ Este arquivo é atualizado ao final de cada etapa. Veja também [AI.md](AI.md).
 | # | Data | Etapa | Resumo |
 |---|---|---|---|
 | 01 | 04/11/2026 | Planejamento + Etapa 1 | Prompt inicial com o contexto completo do projeto; início da Etapa 1 (repositório e núcleo de dados) |
+| 02 | 04/11/2026 | Fechamento da Etapa 1 | Pedido de summary + description ao fim de cada etapa; escolha de CHANGELOG.md + Pull Request por etapa |
 
 ---
 
@@ -226,3 +227,16 @@ Pode começar pela Etapa 1.
 ~~~~
 
 **Resultado:** Etapa 1 concluída: estrutura de pastas, `.gitignore`, README com a Ficha da CitizenTech, `AI.md`, `PROMPTS.md`, `INTEGRANTES.md`, script `python/src/gerar_dados.py`, `dados/niveis_simulados.csv` (simulado) e `dados/config_alertas.json` (valores provisórios).
+
+---
+
+## Prompt 02 (04/11/2026): summary e description por etapa
+
+~~~~text
+vamos fazer assim, a cada etapa que concluirmos, vamos fazer um summary e uma description para mantermos as boas práticas
+~~~~
+
+**Pergunta da IA:** onde registrar o summary + description de cada etapa (CHANGELOG.md, Pull Request por etapa, tag anotada ou só no chat)?
+**Minha resposta (seleção):** CHANGELOG.md + Pull Request por etapa.
+
+**Resultado:** criado o `CHANGELOG.md` com a entrada da Etapa 1. A partir da Etapa 7, cada etapa é desenvolvida em uma branch própria e entra na `main` por um Pull Request com o mesmo summary e description.

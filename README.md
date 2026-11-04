@@ -113,6 +113,10 @@ Se mudar esses valores, mantenha em sincronia as constantes do ESP32 em `edge/sr
 
 ---
 
+## Histórico das etapas
+
+O que foi entregue em cada etapa, com como testar e pendências: [CHANGELOG.md](CHANGELOG.md).
+
 ## Uso de IA
 
 Este projeto usou IA como copiloto. Veja [AI.md](AI.md) (declaração) e [PROMPTS.md](PROMPTS.md) (todos os prompts, em ordem).
