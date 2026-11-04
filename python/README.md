@@ -147,8 +147,6 @@ x = tempo (horas), y = nível (cm)
   - Nível já no crítico: o resultado é 0 ("JÁ ATINGIU").
   - Água estável ou descendo: não há previsão.
 
-Na Etapa de Matemática, essa velocidade é a **derivada** `h'(t)` do nível em relação ao tempo.
-
 ### Testes
 
 40 testes com `pytest`, que cobrem:

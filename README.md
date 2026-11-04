@@ -21,7 +21,6 @@
 |---|---|---|---|
 | Núcleo de dados | [`dados/`](dados/) | Todas | Série de níveis **simulada** e limites das faixas de alerta, no formato único usado por todas as partes |
 | Python | [`python/`](python/) | Computational Thinking with Python | Lê e valida os dados, classifica cada leitura na faixa de alerta, calcula a velocidade de subida e estima os minutos até o nível crítico, em um menu de terminal |
-| Matemática | [`matematica/`](matematica/) | Differentiated Problem Solving | Modela o nível da água `h(t)` com limites, derivadas e integrais. A derivada `h'(t)` é a velocidade de subida que alimenta a estimativa de tempo |
 | Edge | [`edge/`](edge/) | Edge Computing & Computer Systems | ESP32 simulado no Wokwi: mede o nível com sensor ultrassônico, aciona LED/buzzer conforme a faixa, mostra tudo no display e troca dados com o ThingSpeak via MQTT |
 | Web | [`web/`](web/) | Web Development + Front-end Design | App para o morador: nível atual, faixa de alerta, minutos até o nível crítico, histórico e cadastro de ocorrências de alagamento |
 | Experiência | [`docs/experiencia/`](docs/experiencia/) | Software & Total Experience Design | Requisitos (RF, RNF, RN) e backlog do produto |
@@ -56,7 +55,6 @@ Quanto maior esse número, mais tempo o morador tem para levar seus bens para o 
 │   ├── niveis_simulados.csv
 │   └── config_alertas.json
 ├── python/                # Computational Thinking
-├── matematica/            # Differentiated Problem Solving
 ├── edge/                  # Edge Computing (ESP32 + ThingSpeak)
 ├── web/                   # Web Development + Front-end Design
 └── docs/
@@ -66,7 +64,7 @@ Quanto maior esse número, mais tempo o morador tem para levar seus bens para o 
 
 ## Contrato de dados
 
-Todas as partes (Python, Matemática, Edge e Web) usam o **mesmo formato** para cada leitura:
+Todas as partes (Python, Edge e Web) usam o **mesmo formato** para cada leitura:
 
 ```json
 { "timestamp": "2026-11-04T12:00:00", "nivel_cm": 182.5, "estacao": "Humaitá" }
