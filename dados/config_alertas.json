@@ -1,0 +1,33 @@
+{
+  "_aviso": "Valores PROVISÓRIOS, criados para o protótipo. A validar com fonte pública (ex.: Defesa Civil de Porto Alegre). NÃO são valores oficiais.",
+  "_sincronia": "Se mudar estes limites, atualize também as constantes do ESP32 em edge/src/main.cpp.",
+  "versao": 1,
+  "estacao": "Humaitá",
+  "unidade": "cm",
+  "faixas": {
+    "normal": {
+      "codigo": 0,
+      "a_partir_de_cm": 0,
+      "rotulo": "Normal",
+      "mensagem": "Nível normal. Nenhuma ação é necessária agora."
+    },
+    "atencao": {
+      "codigo": 1,
+      "a_partir_de_cm": 150,
+      "rotulo": "Atenção",
+      "mensagem": "A água está subindo. Fique atento e separe documentos e remédios."
+    },
+    "alerta": {
+      "codigo": 2,
+      "a_partir_de_cm": 200,
+      "rotulo": "Alerta",
+      "mensagem": "Risco de alagamento. Leve seus bens para o alto e prepare a saída."
+    },
+    "critico": {
+      "codigo": 3,
+      "a_partir_de_cm": 250,
+      "rotulo": "Crítico",
+      "mensagem": "Nível crítico. Saia agora para um local seguro. Emergência: 199 (Defesa Civil) ou 193 (Bombeiros)."
+    }
+  }
+}
