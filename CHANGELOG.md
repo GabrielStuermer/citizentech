@@ -2,7 +2,60 @@
 
 Registro de cada etapa do AlertaCheia, da mais recente para a mais antiga.
 Cada entrada tem um **summary** (título) e uma **description** (o que foi feito, por quê, como testar, decisões e pendências).
-A partir da Etapa 7, cada etapa também entra na `main` por um Pull Request com o mesmo texto.
+A partir da Etapa 2, cada etapa também entra na `main` por um Pull Request com o mesmo texto.
+
+---
+
+## Etapa 2: Python (Computational Thinking): leitura, faixas, velocidade e tempo até o crítico
+
+**Data:** 04/11/2026 · **Disciplina:** Computational Thinking with Python · **Branch:** `etapa-2-python`
+
+### O que foi feito
+- `leitura.py`: lê o CSV e valida cada linha (data/hora ISO, número, faixa física de 0 a 400 cm, estação preenchida). Linhas inválidas são ignoradas com o número da linha e o motivo. Também ordena as leituras e descarta datas repetidas.
+- `faixas.py`: carrega os limites de `dados/config_alertas.json`, sem valores fixos no código, confere se as quatro faixas existem e estão em ordem, e classifica cada nível.
+- `analise.py` calcula:
+  - a velocidade de subida em cm/h, pela reta de mínimos quadrados da última hora, o que suaviza o ruído;
+  - a tendência (subindo, estável ou descendo);
+  - os minutos até o crítico;
+  - o resumo estatístico e a contagem por faixa;
+  - o **indicador de impacto** (minutos de antecedência).
+- `menu.py`: menu de terminal com resumo, status atual, tempo estimado com a conta explicada, simulação de outro momento e lista das linhas ignoradas. A faixa aparece com texto e símbolo, nunca só por cor.
+- `exemplos/niveis_com_erros.csv`: CSV com 6 erros de propósito, para demonstrar a validação.
+- 40 testes com `pytest`, incluindo um teste de integração com o CSV do projeto.
+- `python/README.md`: problema, solução e Quickstart, respondendo à pergunta da disciplina.
+
+### Por quê
+A pergunta da disciplina é como os dados apoiam uma decisão. Uma leitura isolada não diz se há perigo. A **série** de leituras dá a velocidade, e a velocidade dá o **tempo que o morador tem para agir**.
+
+### Como testar
+```bash
+python python/src/menu.py                                                # dados simulados
+python python/src/menu.py --arquivo python/exemplos/niveis_com_erros.csv  # validação
+python -m pytest python                                                  # 40 testes (precisa do pytest)
+```
+Resultados esperados:
+- Opção 1: antecedência de **110 min** (Alerta às 01:10, Crítico às 03:00).
+- Opção 4 com `05/11/2026 01:10`: estimativa de **1 h 46 min**, ou seja, por volta de 02:56. A chegada real nos dados é às 03:00.
+- Com o arquivo de exemplo: 6 linhas ignoradas, cada uma com o motivo.
+
+### Decisões e pendências
+- Velocidade calculada com uma janela de 60 min. Abaixo de ±2 cm/h o nível é considerado *estável* (filtro de ruído).
+- A estimativa supõe ritmo constante de subida. Essa limitação está documentada e aparece na tela.
+- O ambiente virtual fica em `.venv/` na raiz, compartilhado com a Etapa 3 e fora do Git.
+- O RM continua `[preencher]`.
+
+### Commits
+| Hash | Mensagem |
+|---|---|
+| `c72502c` | feat: adiciona leitura e validação do CSV de níveis |
+| `6a7968e` | test: adiciona testes da leitura e validação do CSV |
+| `95bfede` | feat: adiciona classificação das leituras em faixas de alerta |
+| `c3e372d` | test: adiciona testes da classificação em faixas de alerta |
+| `c8b8e02` | feat: adiciona cálculo de velocidade de subida e minutos até o nível crítico |
+| `f12a159` | test: adiciona testes da análise e do indicador de antecedência |
+| `8dfa5f3` | feat: adiciona menu de terminal com resumo, status e tempo estimado |
+| `d9069c1` | feat: adiciona CSV de exemplo com linhas inválidas para demonstrar a validação |
+| `25116dd` | docs: adiciona README da parte Python com problema, solução e Quickstart |
 
 ---
 

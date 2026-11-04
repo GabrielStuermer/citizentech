@@ -7,6 +7,8 @@ Este arquivo é atualizado ao final de cada etapa. Veja também [AI.md](AI.md).
 |---|---|---|---|
 | 01 | 04/11/2026 | Planejamento + Etapa 1 | Prompt inicial com o contexto completo do projeto; início da Etapa 1 (repositório e núcleo de dados) |
 | 02 | 04/11/2026 | Fechamento da Etapa 1 | Pedido de summary + description ao fim de cada etapa; escolha de CHANGELOG.md + Pull Request por etapa |
+| 03 | 04/11/2026 | Configuração do GitHub | Confirmação de que a conta logada no `gh` é a mesma (nome de usuário alterado) |
+| 04 | 04/11/2026 | Etapa 2 | Edge passa para o fim; início da Etapa 2 (Python) |
 
 ---
 
@@ -240,3 +242,23 @@ vamos fazer assim, a cada etapa que concluirmos, vamos fazer um summary e uma de
 **Minha resposta (seleção):** CHANGELOG.md + Pull Request por etapa.
 
 **Resultado:** criado o `CHANGELOG.md` com a entrada da Etapa 1. A partir da Etapa 7, cada etapa é desenvolvida em uma branch própria e entra na `main` por um Pull Request com o mesmo summary e description.
+
+---
+
+## Prompt 03 (04/11/2026): conta do GitHub
+
+~~~~text
+BielStuermer é a mesma conta, apenas alterei para Gabriel, preciso mudar algo?
+~~~~
+
+**Resultado:** a IA conferiu pela API que o login atual é `GabrielStuermer`, com permissão de admin, e que o repositório já estava privado. Nada precisou mudar. Foi feito o push da `main` com a Etapa 1.
+
+---
+
+## Prompt 04 (04/11/2026): Edge por último e Etapa 2 (Python)
+
+~~~~text
+vamos pular a de edge e deixar por ultimo
+~~~~
+
+**Resultado:** nova ordem das etapas: 2, 3, 4, 5, 6, 7 (Edge). Etapa 2 feita na branch `etapa-2-python`: leitura e validação do CSV, classificação em faixas, velocidade de subida por regressão linear, minutos até o crítico, indicador de antecedência (110 min), menu de terminal, CSV de exemplo com erros, 40 testes com pytest e README com Quickstart.
