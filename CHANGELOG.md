@@ -5,6 +5,66 @@ o que foi feito, por quê, como testar, decisões e pendências.
 
 ---
 
+## Etapa 4: aplicação web (Web Development + Front-end Design)
+
+**Data:** 04/11/2026 · **Disciplinas:** Web Development e Front-end Design
+
+### O que foi feito
+- App em **React 19 + Vite 8** na pasta `web/`, organizado em camadas:
+  - `dominio/`: regras de negócio em JS puro;
+  - `servicos/`: acesso a dados;
+  - `hooks/`: estado das telas;
+  - `componentes/` e `secoes/`: apresentação.
+- **Tela principal:**
+  - faixa de alerta com cor, ícone e texto;
+  - o que fazer;
+  - **minutos até o nível crítico**, com horário previsto;
+  - nível, tendência e velocidade;
+  - histórico em gráfico SVG, com tabela de dados e o indicador de impacto.
+- **Simulação:** uma "máquina do tempo" para ver a água subir e o alerta mudar (para a demo do pitch).
+- **CRUD de ocorrências** via API provisória (json-server). O acesso fica isolado em `servicos/ocorrenciasApi.js`, e cada falha da API vira uma mensagem com orientação de como prosseguir.
+- **Estados** de carregando, sucesso, erro e vazio em todas as seções.
+- **Validação** do formulário com erro por campo e foco no primeiro erro.
+- **Sem conexão:**
+  - leituras simuladas embutidas no app;
+  - cópia local das ocorrências, com aviso de quando foi salva;
+  - envio bloqueado e nova busca automática quando a internet volta.
+- **Módulo opcional do ThingSpeak**, que lê o canal que o ESP32 vai alimentar.
+- **13 componentes** reutilizáveis.
+- **56 testes** (Vitest + Testing Library), incluindo a paridade com o Python.
+- A parte de **Matemática** foi retirada do repositório, porque será entregue fora do código.
+
+### Por quê
+O morador sob estresse precisa de uma resposta só: **"quanto tempo eu tenho?"**. A tela põe isso em primeiro lugar, em letra grande, sem depender de cor, e continua útil sem internet. As ocorrências deixam a vizinhança avisar onde a água já chegou.
+
+### Como testar
+```bash
+cd web
+npm install
+npm run dev:tudo   # abre em http://localhost:5173
+npm test           # 56 testes
+```
+Resultados esperados:
+- Arrastando a simulação para **05/11/2026 01:10**: faixa **ALERTA** e "Nível crítico em cerca de **1 h 46 min**, por volta das 02:56".
+- Na seção Histórico: **1 h 50 min** de antecedência.
+- Criar, editar e excluir uma ocorrência: a lista se atualiza e aparece a mensagem de sucesso.
+- Parar a API (`Ctrl+C` no terminal) e recarregar: aviso de "sem conexão" com a lista salva e o envio bloqueado.
+
+Verificação automatizada feita no navegador, com o app e a API rodando, nas larguras de 360, 768 e 1280 px:
+- sem rolagem horizontal e sem erros no console;
+- foco visível;
+- simulação às 01:10;
+- CRUD completo;
+- comportamento com a API fora do ar.
+
+### Decisões e pendências
+- **API externa do CRUD ainda não definida pelo professor.** Hoje é o json-server, e para trocar basta mexer em um arquivo.
+- O dashboard via ThingSpeak depende da Etapa de Edge e da confirmação do professor.
+- PWA (abrir o app sem internet do zero) e fila de envio offline ficaram como próximos passos.
+- O RM continua `[preencher]`.
+
+---
+
 ## Etapa 2: Python (Computational Thinking): leitura, faixas, velocidade e tempo até o crítico
 
 **Data:** 04/11/2026 · **Disciplina:** Computational Thinking with Python
@@ -50,7 +110,7 @@ Resultados esperados:
 **Data:** 04/11/2026 · **Disciplinas:** todas (base compartilhada)
 
 ### O que foi feito
-- Criei a estrutura de pastas, com uma por disciplina (`python/`, `matematica/`, `edge/`, `web/`, `docs/`) e a pasta `dados/` como núcleo compartilhado.
+- Criei a estrutura de pastas, com uma por disciplina (`python/`, `edge/`, `web/`, `docs/`) e a pasta `dados/` como núcleo compartilhado.
 - Criei o `.gitignore`, que já bloqueia `edge/src/secrets.h` (credenciais), `.pio/`, `node_modules/` e caches do Python.
 - Escrevi o `README.md` com a Ficha da CitizenTech: problema, cidadão, indicador de impacto, ODS 11/13/9/3 e o que cada parte faz.
 - Documentei o **contrato de dados**: `{ timestamp, nivel_cm, estacao }`.
@@ -60,7 +120,7 @@ Resultados esperados:
 - Criei `dados/config_alertas.json` com as faixas Normal (0), Atenção (150), Alerta (200) e Crítico (250 cm). São valores **provisórios, a validar com fonte pública**.
 
 ### Por quê
-Todas as partes (Python, Matemática, Edge e Web) leem o mesmo formato de dados e as mesmas faixas. Definir isso primeiro evita retrabalho nas próximas etapas.
+Todas as partes (Python, Edge e Web) leem o mesmo formato de dados e as mesmas faixas. Definir isso primeiro evita retrabalho nas próximas etapas.
 
 ### Como testar
 ```bash
