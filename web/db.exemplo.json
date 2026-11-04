@@ -1,0 +1,18 @@
+{
+  "ocorrencias": [
+    {
+      "id": "1",
+      "rua": "Rua A, esquina com a Rua B (exemplo)",
+      "descricao": "Água acumulada na calçada depois da chuva da madrugada. Carros passando devagar.",
+      "gravidade": "baixa",
+      "data": "2026-11-05T00:40"
+    },
+    {
+      "id": "2",
+      "rua": "Rua C, perto da praça (exemplo)",
+      "descricao": "Água entrando no térreo de duas casas. Moradores subindo móveis.",
+      "gravidade": "media",
+      "data": "2026-11-05T01:25"
+    }
+  ]
+}
