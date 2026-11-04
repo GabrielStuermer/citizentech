@@ -1,0 +1,38 @@
+# =========================================================
+# .gitignore do AlertaCheia
+# Arquivos que o Git deve IGNORAR (não vão para o GitHub).
+# =========================================================
+
+# ----- Segredos: NUNCA versionar -----
+# Credenciais do WiFi e do ThingSpeak ficam só na sua máquina.
+# O arquivo versionado é o edge/src/secrets.example.h (com placeholders).
+edge/src/secrets.h
+.env
+.env.*
+!.env.example
+
+# ----- Python -----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ----- Node / front-end (pasta web) -----
+node_modules/
+dist/
+npm-debug.log*
+*.log
+
+# ----- PlatformIO / Wokwi (pasta edge) -----
+# .pio guarda o firmware compilado; é recriado a cada build.
+.pio/
+
+# ----- Editor e sistema operacional -----
+.vscode/
+Thumbs.db
+desktop.ini
+.DS_Store
+*.swp
