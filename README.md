@@ -50,7 +50,6 @@ Quanto maior esse número, mais tempo o morador tem para levar seus bens para o 
 
 ```
 ├── README.md              # este arquivo (começa com a Ficha da CitizenTech)
-├── AI.md                  # declaração de uso de IA
 ├── PROMPTS.md             # todos os prompts usados, em ordem
 ├── INTEGRANTES.md         # nome e RM
 ├── dados/                 # núcleo de dados compartilhado
@@ -119,7 +118,7 @@ O que foi entregue em cada etapa, com como testar e pendências: [CHANGELOG.md](
 
 ## Uso de IA
 
-Este projeto usou IA como copiloto. Veja [AI.md](AI.md) (declaração) e [PROMPTS.md](PROMPTS.md) (todos os prompts, em ordem).
+Este projeto usou IA como copiloto. Veja [PROMPTS.md](PROMPTS.md) (todos os prompts, em ordem).
 
 ## Integrantes
 

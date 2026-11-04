@@ -1,7 +1,7 @@
 # Registro de prompts
 
 Todos os prompts usados com a IA (Claude Code, Claude Opus 5.5) neste projeto, **em ordem**, copiados exatamente como foram enviados.
-Este arquivo é atualizado ao final de cada etapa. Veja também [AI.md](AI.md).
+Este arquivo é atualizado ao final de cada etapa.
 
 | # | Data | Etapa | Resumo |
 |---|---|---|---|
