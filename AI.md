@@ -27,6 +27,7 @@ Sempre a partir das minhas instruções e com a minha revisão:
 | Python | Código dos módulos de leitura, faixas, análise e menu, e os testes com pytest |
 | Aplicação web | Código dos componentes, hooks, serviços e estilos, e os testes com Vitest |
 | Documentação | Rascunhos dos READMEs e do CHANGELOG |
+| Relatório de Experiência | Rascunho dos requisitos (RF, RNF e RN) e do backlog do produto |
 
 ## Cuidados adotados
 
