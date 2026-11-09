@@ -5,6 +5,31 @@ o que foi feito, por quê, como testar, decisões e pendências.
 
 ---
 
+## Etapa 5: Relatório de Experiência (Software & Total Experience Design)
+
+**Data:** 09/11/2026 · **Disciplina:** Software & Total Experience Design
+
+### O que foi feito
+- `docs/experiencia/relatorio.md`: capa, integrantes, índice, justificativa, escopo, telas, requisitos, backlog e conclusão.
+- 26 Requisitos Funcionais ligados às telas, 17 Requisitos Não Funcionais com a forma de verificação e 17 Regras de Negócio.
+- Backlog com 25 histórias em 5 épicos, ordenado por prioridade e ligado aos requisitos.
+- Correção no app web: a borda das opções de gravidade passou de contraste 1,74:1 para 8,03:1 (o mínimo para contornos de controles é 3:1).
+
+### Por quê
+Os requisitos registram o que o sistema faz e por que cada tela existe. O relatório separa o que já funciona do que é planejado, para o avaliador saber exatamente o estado do projeto.
+
+### Como testar
+Abra o relatório e confira cada RF marcado como *Concluído* na tela indicada. Regras e valores conferidos com o código, e os 96 testes (40 no Python e 56 na web) continuam passando.
+
+### Decisões e pendências
+- O formato é provisório: os slides da disciplina ainda tinham campos em branco.
+- Faltam o nome do professor e o RM na capa.
+- RF19 e RF21 dependem de um canal real do ThingSpeak.
+- Teste com leitor de tela real ainda pendente (RNF05).
+- O backlog inclui itens novos, como a notificação sem precisar abrir o app (PB06).
+
+---
+
 ## Etapa 4: aplicação web (Web Development + Front-end Design)
 
 **Data:** 04/11/2026 · **Disciplinas:** Web Development e Front-end Design
