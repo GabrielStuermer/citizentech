@@ -350,7 +350,7 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
   gap: 0.6rem;
   min-height: 48px;
   padding: 0.4rem 0.75rem;
-  border: 2px solid var(--cor-borda);
+  border: 2px solid var(--cor-texto-suave); /* contorno de controle: contraste de pelo menos 3:1 */
   border-radius: 8px;
   cursor: pointer;
 }
