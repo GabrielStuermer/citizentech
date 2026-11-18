@@ -1,0 +1,6 @@
+# Configuração do simulador Wokwi (extensão do VS Code).
+# Aponta para o firmware gerado pelo PlatformIO (botão "Build").
+[wokwi]
+version = 1
+firmware = '.pio/build/esp32dev/firmware.bin'
+elf = '.pio/build/esp32dev/firmware.elf'

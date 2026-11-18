@@ -5,6 +5,41 @@ o que foi feito, por quê, como testar, decisões e pendências.
 
 ---
 
+## Etapa 7: Edge Computing (ESP32 + ThingSpeak)
+
+**Data:** 18/11/2026 · **Disciplina:** Edge Computing & Computer Systems
+
+### O que foi feito
+- Projeto PlatformIO na pasta `edge/`, simulado com a extensão do Wokwi no VS Code.
+- **Circuito:** ESP32, sensor ultrassônico HC-SR04, display OLED SSD1306, quatro LEDs (um por faixa), buzzer e dois botões (Rede e Silenciar).
+- **Firmware** (`src/main.cpp`):
+  - amostragem constante a cada 1 s com `millis()`, sem `delay()`;
+  - classificação nas mesmas faixas de `dados/config_alertas.json`;
+  - alarme local que funciona sem internet;
+  - display com medida, estado do alarme e conexão WiFi/MQTT.
+- **ThingSpeak via MQTT:**
+  - envio de nível, faixa e alarme a cada 20 s (canal 3586259);
+  - comandos remotos pelo field4: teste do alarme, silenciar, voltar ao padrão e novo limite crítico.
+- **Botão Rede** com três modos (normal, MQTT cortado, WiFi cortado), para demonstrar as desconexões.
+- **Credenciais** em `src/secrets.h`, fora do Git. O repositório guarda só o modelo `secrets.example.h`.
+- **Ajuste de compilação** (`scripts/sem_mapa.py`): o linker do ESP32 falhava porque o caminho da pasta tem acento ("Área de Trabalho").
+- `edge/README.md` e `edge/roteiro-video.md`.
+
+### Como testar
+Abra a pasta `edge/` no VS Code, compile (✓) e rode **Wokwi: Start Simulator**. Teste feito em 18/11/2026:
+- leituras a cada 1000 ms no Serial Monitor;
+- LED da faixa aceso;
+- conexão MQTT e envios guardados no canal (gráficos dos campos 1 e 2);
+- comando `field4=1` enviado pelo navegador acionou o teste do alarme (LEDs e buzzer);
+- com o MQTT cortado pelo botão, o comando não chega, como esperado.
+
+### Decisões e pendências
+- Envio a cada 20 s, por causa do limite de 15 s do plano gratuito do ThingSpeak.
+- Comandos enviados com o dispositivo desconectado se perdem (limitação documentada).
+- Falta gravar o vídeo, seguindo o `edge/roteiro-video.md`.
+
+---
+
 ## Etapa 5: Relatório de Experiência (Software & Total Experience Design)
 
 **Data:** 09/11/2026 · **Disciplina:** Software & Total Experience Design
@@ -28,7 +63,7 @@ Abra o relatório e confira cada RF marcado como *Concluído* na tela indicada. 
 - Teste com leitor de tela real ainda pendente (RNF05).
 - O backlog inclui itens novos, como a notificação sem precisar abrir o app (PB06).
 
----
+---9
 
 ## Etapa 4: aplicação web (Web Development + Front-end Design)
 

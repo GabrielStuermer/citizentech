@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "author": "Luis Gabriel Pinheiro Stuermer",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-hc-sr04", "id": "sensor", "top": -172.9, "left": -110.5, "attrs": { "distance": "320" } },
+    { "type": "board-ssd1306", "id": "oled", "top": -150, "left": 190, "attrs": { "i2cAddress": "0x3c" } },
+
+    { "type": "wokwi-led", "id": "led_normal", "top": 6, "left": 340, "attrs": { "color": "green", "label": "Normal" } },
+    { "type": "wokwi-led", "id": "led_atencao", "top": 6, "left": 400, "attrs": { "color": "yellow", "label": "Atencao" } },
+    { "type": "wokwi-led", "id": "led_alerta", "top": 6, "left": 460, "attrs": { "color": "orange", "label": "Alerta" } },
+    { "type": "wokwi-led", "id": "led_critico", "top": 6, "left": 520, "attrs": { "color": "red", "label": "Critico" } },
+    { "type": "wokwi-resistor", "id": "r_normal", "top": 100, "left": 326, "rotate": 90, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "r_atencao", "top": 100, "left": 386, "rotate": 90, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "r_alerta", "top": 100, "left": 446, "rotate": 90, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "r_critico", "top": 100, "left": 506, "rotate": 90, "attrs": { "value": "220" } },
+
+    { "type": "wokwi-buzzer", "id": "buzzer", "top": 200, "left": 340, "attrs": { "volume": "0.2" } },
+
+    { "type": "wokwi-pushbutton", "id": "btn_rede", "top": 140, "left": -200, "attrs": { "color": "blue", "label": "Rede" } },
+    { "type": "wokwi-pushbutton", "id": "btn_silenciar", "top": 230, "left": -200, "attrs": { "color": "red", "label": "Silenciar" } }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+
+    [ "sensor:VCC", "esp:5V", "red", [] ],
+    [ "sensor:GND", "esp:GND.1", "black", [] ],
+    [ "sensor:TRIG", "esp:5", "green", [] ],
+    [ "sensor:ECHO", "esp:18", "blue", [] ],
+
+    [ "oled:VCC", "esp:3V3", "red", [] ],
+    [ "oled:GND", "esp:GND.2", "black", [] ],
+    [ "oled:SDA", "esp:21", "purple", [] ],
+    [ "oled:SCL", "esp:22", "orange", [] ],
+
+    [ "esp:25", "r_normal:1", "green", [] ],
+    [ "r_normal:2", "led_normal:A", "green", [] ],
+    [ "led_normal:C", "esp:GND.3", "black", [] ],
+    [ "esp:26", "r_atencao:1", "gold", [] ],
+    [ "r_atencao:2", "led_atencao:A", "gold", [] ],
+    [ "led_atencao:C", "esp:GND.3", "black", [] ],
+    [ "esp:27", "r_alerta:1", "orange", [] ],
+    [ "r_alerta:2", "led_alerta:A", "orange", [] ],
+    [ "led_alerta:C", "esp:GND.3", "black", [] ],
+    [ "esp:14", "r_critico:1", "red", [] ],
+    [ "r_critico:2", "led_critico:A", "red", [] ],
+    [ "led_critico:C", "esp:GND.3", "black", [] ],
+
+    [ "esp:13", "buzzer:2", "magenta", [] ],
+    [ "buzzer:1", "esp:GND.2", "black", [] ],
+
+    [ "btn_rede:1.l", "esp:32", "blue", [] ],
+    [ "btn_rede:2.l", "esp:GND.1", "black", [] ],
+    [ "btn_silenciar:1.l", "esp:33", "red", [] ],
+    [ "btn_silenciar:2.l", "esp:GND.1", "black", [] ]
+  ],
+  "dependencies": {}
+}
