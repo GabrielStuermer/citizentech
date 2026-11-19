@@ -1,16 +1,9 @@
-// Controle da "máquina do tempo" dos dados simulados.
-// Usa um <input type="range"> nativo: funciona com teclado (setas, Home, End)
-// e o leitor de tela anuncia a data/hora escolhida (aria-valuetext).
+// Régua de tempo e botão Reproduzir/Pausar para percorrer os dados simulados
 import { Botao } from './Botao.jsx'
 import { formatarDataHora } from '../utils/formatacao.js'
 
-/**
- * @param {{
- *   leituras: Array, indice: number, tocando: boolean,
- *   onMudarIndice: (i: number) => void, onAlternar: () => void
- * }} props
- */
 export function ControleSimulacao({ leituras, indice, tocando, onMudarIndice, onAlternar }) {
+  // Momento da leitura que está selecionada na régua
   if (leituras.length < 2) return null
   const momento = leituras[indice].timestamp
 
@@ -36,6 +29,7 @@ export function ControleSimulacao({ leituras, indice, tocando, onMudarIndice, on
           <label htmlFor="simulacao-momento">
             Momento simulado: <strong>{formatarDataHora(momento)}</strong>
           </label>
+          {/* Cada posição da régua é uma leitura; aria-valuetext lê a data, não o número */}
           <input
             id="simulacao-momento"
             type="range"

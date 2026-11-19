@@ -1,21 +1,9 @@
-// Acesso à API de ocorrências de alagamento (CRUD).
-//
-// ESTE É O ÚNICO ARQUIVO QUE CONHECE A API. Hoje ela é um json-server local
-// (provisório). Quando a API definitiva for escolhida, basta adaptar as
-// funções abaixo: o resto do app continua igual.
-//
-// Endereço configurável no arquivo .env (veja .env.example):
-//   VITE_API_URL=http://localhost:3001
-
+// Único arquivo que conhece a API do CRUD: trocar de API = mexer só aqui
 const URL_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
 const RECURSO = `${URL_BASE}/ocorrencias`
-const TEMPO_LIMITE_MS = 8000
+const TEMPO_LIMITE_MS = 8000 // desiste da requisição depois de 8 s
 
-/**
- * Erro de API com uma mensagem simples para o morador e uma orientação
- * de como prosseguir.
- * tipo: 'rede' | 'tempo' | 'nao-encontrado' | 'dados-invalidos' | 'servidor'
- */
+// Erro com tipo e orientação de como prosseguir, para mostrar na tela
 export class ErroApi extends Error {
   constructor(tipo, mensagem, orientacao) {
     super(mensagem)
@@ -25,7 +13,7 @@ export class ErroApi extends Error {
   }
 }
 
-/** Converte o código HTTP de erro em um ErroApi com texto amigável. */
+// Traduz o código HTTP de erro em mensagem amigável
 function erroPorStatus(status) {
   if (status === 404) {
     return new ErroApi('nao-encontrado',
@@ -42,10 +30,7 @@ function erroPorStatus(status) {
     'Aguarde alguns minutos e tente de novo.')
 }
 
-/**
- * Faz uma requisição com tempo limite e transforma qualquer falha em ErroApi.
- * @returns {Promise<any>} o JSON da resposta (ou null quando não há corpo)
- */
+// fetch com tempo limite, JSON e tratamento de erro em um lugar só
 async function requisitar(url, opcoes = {}) {
   const controle = new AbortController()
   const temporizador = setTimeout(() => controle.abort(), TEMPO_LIMITE_MS)
@@ -58,11 +43,13 @@ async function requisitar(url, opcoes = {}) {
       signal: controle.signal,
     })
   } catch (erro) {
+    // Passou do tempo limite
     if (erro.name === 'AbortError') {
       throw new ErroApi('tempo',
         'O servidor demorou demais para responder.',
         'Verifique sua conexão e tente de novo.')
     }
+    // Sem conexão ou API desligada
     throw new ErroApi('rede',
       'Não foi possível conectar ao servidor de ocorrências.',
       'Verifique sua internet. Se estiver testando no computador, confira se a API está rodando (npm run api).')
@@ -72,22 +59,20 @@ async function requisitar(url, opcoes = {}) {
 
   if (!resposta.ok) throw erroPorStatus(resposta.status)
   const texto = await resposta.text()
-  return texto ? JSON.parse(texto) : null
+  return texto ? JSON.parse(texto) : null // DELETE pode voltar sem corpo
 }
 
-// ---------------- Operações do CRUD ----------------
-
-/** Consultar: lista todas as ocorrências. */
+// GET /ocorrencias
 export function listarOcorrencias() {
   return requisitar(RECURSO)
 }
 
-/** Criar: envia uma nova ocorrência e devolve a ocorrência salva (com id). */
+// POST /ocorrencias
 export function criarOcorrencia(dados) {
   return requisitar(RECURSO, { method: 'POST', body: JSON.stringify(dados) })
 }
 
-/** Atualizar: substitui os dados de uma ocorrência existente. */
+// PUT /ocorrencias/:id
 export function atualizarOcorrencia(id, dados) {
   return requisitar(`${RECURSO}/${encodeURIComponent(id)}`, {
     method: 'PUT',
@@ -95,7 +80,7 @@ export function atualizarOcorrencia(id, dados) {
   })
 }
 
-/** Excluir: remove uma ocorrência. */
+// DELETE /ocorrencias/:id
 export async function excluirOcorrencia(id) {
   await requisitar(`${RECURSO}/${encodeURIComponent(id)}`, { method: 'DELETE' })
 }

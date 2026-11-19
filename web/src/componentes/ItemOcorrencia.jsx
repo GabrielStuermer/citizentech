@@ -1,6 +1,4 @@
-// Uma ocorrência da lista, com os botões Editar e Excluir.
-// A exclusão pede confirmação na própria tela (sem janela pop-up),
-// para evitar apagar sem querer.
+// Uma ocorrência da lista, com Editar e Excluir (com confirmação)
 import { useEffect, useRef, useState } from 'react'
 import { Botao } from './Botao.jsx'
 import { buscarGravidade } from '../dominio/ocorrencias.js'
@@ -12,7 +10,7 @@ export function ItemOcorrencia({ ocorrencia, emEdicao, excluindo, bloqueado, onE
   const gravidade = buscarGravidade(ocorrencia.gravidade)
   const idTitulo = `ocorrencia-${ocorrencia.id}`
 
-  // Ao abrir a confirmação, o foco vai para "Não": a opção segura.
+  // Ao pedir confirmação, o foco vai para "Não" (evita excluir sem querer)
   useEffect(() => {
     if (confirmando) botaoNaoRef.current?.focus()
   }, [confirmando])
@@ -31,6 +29,7 @@ export function ItemOcorrencia({ ocorrencia, emEdicao, excluindo, bloqueado, onE
       </p>
       <p className="ocorrencia__descricao">{ocorrencia.descricao}</p>
 
+      {/* Confirmação na própria tela, ou os botões Editar/Excluir */}
       {confirmando ? (
         <div className="ocorrencia__confirmacao" role="group" aria-label="Confirmar exclusão">
           <p>Excluir esta ocorrência? Essa ação não pode ser desfeita.</p>

@@ -1,23 +1,16 @@
-// Faixas de alerta (normal, atenção, alerta, crítico).
-// Mesma regra do Python (python/src/faixas.py). Os limites vêm de
-// dados/config_alertas.json: para mudar um limite, edite o JSON.
-
+// Faixas de alerta (mesmas regras do python/src/faixas.py)
 export const FAIXAS_OBRIGATORIAS = ['normal', 'atencao', 'alerta', 'critico']
 
-/**
- * Transforma o conteúdo do config_alertas.json em uma lista de faixas
- * em ordem crescente de nível.
- * @param {object} config - conteúdo do JSON já convertido em objeto
- * @returns {Array<{chave, codigo, aPartirDeCm, rotulo, mensagem}>}
- * @throws {Error} se faltar alguma faixa ou se os limites estiverem fora de ordem
- */
+// Converte o config_alertas.json numa lista de faixas validada
 export function carregarFaixas(config) {
+  // Nenhuma faixa pode faltar
   const doArquivo = config?.faixas ?? {}
   const faltando = FAIXAS_OBRIGATORIAS.filter((chave) => !(chave in doArquivo))
   if (faltando.length > 0) {
     throw new Error(`faixas ausentes na configuração: ${faltando.join(', ')}`)
   }
 
+  // Formato usado no app (camelCase)
   const faixas = FAIXAS_OBRIGATORIAS.map((chave) => ({
     chave,
     codigo: Number(doArquivo[chave].codigo),
@@ -26,7 +19,7 @@ export function carregarFaixas(config) {
     mensagem: doArquivo[chave].mensagem,
   }))
 
-  // Cada faixa precisa começar acima da anterior.
+  // Cada faixa precisa começar acima da anterior
   for (let i = 1; i < faixas.length; i++) {
     if (faixas[i].aPartirDeCm <= faixas[i - 1].aPartirDeCm) {
       throw new Error(`o limite de "${faixas[i].chave}" precisa ser maior que o de "${faixas[i - 1].chave}"`)
@@ -35,10 +28,7 @@ export function carregarFaixas(config) {
   return faixas
 }
 
-/**
- * Diz em qual faixa um nível está: a ÚLTIMA cujo limite inicial é <= nível.
- * Ex.: limites 0/150/200/250 e nível 210 -> "alerta".
- */
+// Última faixa cujo limite é <= ao nível
 export function classificarNivel(nivelCm, faixas) {
   let encontrada = faixas[0]
   for (const faixa of faixas) {
@@ -47,7 +37,7 @@ export function classificarNivel(nivelCm, faixas) {
   return encontrada
 }
 
-/** Devolve a faixa com a chave informada (ex.: "critico"). */
+// Procura uma faixa pela chave (ex.: 'critico')
 export function buscarFaixa(chave, faixas) {
   const faixa = faixas.find((f) => f.chave === chave)
   if (!faixa) throw new Error(`faixa não encontrada: ${chave}`)

@@ -1,14 +1,8 @@
-// Campo de formulário acessível: rótulo (<label>), texto de ajuda e erro.
-//
-// O campo em si (input, select, textarea) é passado como uma função que
-// recebe as propriedades de acessibilidade já prontas:
-//   <CampoFormulario id="rua" rotulo="Rua" erro={erros.rua}>
-//     {(props) => <input {...props} value={rua} onChange={...} />}
-//   </CampoFormulario>
-// Assim o leitor de tela sempre lê o rótulo, a ajuda e o erro do campo.
+// Campo de formulário acessível: rótulo, ajuda e erro ligados ao campo
 import { Icone } from './Icone.jsx'
 
 export function CampoFormulario({ id, rotulo, ajuda, erro, obrigatorio = true, children }) {
+  // IDs da ajuda e do erro, lidos pelo leitor de tela via aria-describedby
   const idAjuda = ajuda ? `${id}-ajuda` : null
   const idErro = erro ? `${id}-erro` : null
   const descritoPor = [idAjuda, idErro].filter(Boolean).join(' ') || undefined
@@ -26,6 +20,7 @@ export function CampoFormulario({ id, rotulo, ajuda, erro, obrigatorio = true, c
           <span>{erro}</span>
         </p>
       )}
+      {/* O campo em si vem de fora (input ou textarea) e recebe as props de acessibilidade */}
       {children({
         id,
         name: id,

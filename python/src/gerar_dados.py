@@ -1,38 +1,16 @@
-"""
-Gera a série temporal SIMULADA de níveis de água do AlertaCheia.
-
-ATENÇÃO: estes dados NÃO são medições reais. Eles são criados por este
-script apenas para testar o sistema. Nenhum dado pessoal é usado.
-
-A série tem quatro fases, uma depois da outra, com uma leitura a cada
-10 minutos:
-  1. normal        -> nível estável, com pequenas oscilações
-  2. subida lenta  -> a água sobe devagar (chuva contínua)
-  3. subida rápida -> a água sobe rápido (cheia)
-  4. estabilização -> a água para de subir em um nível alto
-
-Como executar (a partir da raiz do repositório):
-    python python/src/gerar_dados.py
-
-Saída: dados/niveis_simulados.csv, com as colunas do contrato de dados:
-    timestamp, nivel_cm, estacao
-"""
-
+# Gera dados/niveis_simulados.csv: uma cheia SIMULADA (não são medições reais).
 import csv
 import random
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# ---------------------------------------------------------------
-# Parâmetros da simulação (todos inventados, só para teste)
-# ---------------------------------------------------------------
 ESTACAO = "Humaitá"
-INICIO = datetime(2026, 11, 4, 0, 0, 0)  # data e hora da primeira leitura
-INTERVALO_MIN = 10                       # minutos entre uma leitura e outra
-SEMENTE = 2024                           # semente fixa: o arquivo sai sempre igual
-RUIDO_CM = 1.0                           # oscilação máxima de cada leitura (+/- cm)
+INICIO = datetime(2026, 11, 4, 0, 0, 0)
+INTERVALO_MIN = 10   # uma leitura a cada 10 minutos
+SEMENTE = 2024       # semente fixa: o arquivo sai sempre igual
+RUIDO_CM = 1.0       # "tremido" do sensor, em cm
 
-# Cada fase: (nome, duração em horas, nível no início em cm, nível no fim em cm)
+# Fases da cheia: (nome, duração em horas, nível inicial, nível final)
 FASES = [
     ("normal",        12,  80.0,  80.0),
     ("subida lenta",  12,  80.0, 170.0),
@@ -40,37 +18,29 @@ FASES = [
     ("estabilização",  6, 280.0, 285.0),
 ]
 
-# Caminho do arquivo de saída: <raiz do repositório>/dados/niveis_simulados.csv
-# parents[2] sobe duas pastas a partir de python/src/ até a raiz.
+# Caminho do CSV a partir da raiz do repositório
 RAIZ = Path(__file__).resolve().parents[2]
 ARQUIVO_SAIDA = RAIZ / "dados" / "niveis_simulados.csv"
 
 
+# Cria a lista de leituras, fase por fase
 def gerar_leituras():
-    """Cria a lista de leituras seguindo as fases definidas em FASES.
-
-    Dentro de cada fase, o nível vai do valor inicial ao final em linha
-    reta (interpolação linear), e somamos um pequeno ruído aleatório
-    para parecer uma medição de sensor de verdade.
-
-    Retorna:
-        list[dict]: cada item tem as chaves "timestamp", "nivel_cm" e "estacao".
-    """
-    sorteio = random.Random(SEMENTE)  # gerador de números aleatórios com semente fixa
+    sorteio = random.Random(SEMENTE)
     leituras = []
     momento = INICIO
 
     for _nome, horas, nivel_inicio, nivel_fim in FASES:
-        passos = int(horas * 60 / INTERVALO_MIN)  # quantas leituras cabem na fase
+        passos = int(horas * 60 / INTERVALO_MIN)
 
         for i in range(passos):
-            fracao = i / passos  # 0.0 no início da fase, quase 1.0 no fim
+            # Nível em linha reta entre o início e o fim da fase, mais um pouco de ruído
+            fracao = i / passos
             nivel = nivel_inicio + (nivel_fim - nivel_inicio) * fracao
             nivel += sorteio.uniform(-RUIDO_CM, RUIDO_CM)
 
             leituras.append({
-                "timestamp": momento.isoformat(),      # ex.: 2026-11-04T12:00:00
-                "nivel_cm": round(max(nivel, 0.0), 1),  # nunca negativo, 1 casa decimal
+                "timestamp": momento.isoformat(),
+                "nivel_cm": round(max(nivel, 0.0), 1),
                 "estacao": ESTACAO,
             })
             momento += timedelta(minutes=INTERVALO_MIN)
@@ -78,17 +48,17 @@ def gerar_leituras():
     return leituras
 
 
+# Grava as leituras no CSV (cria a pasta se precisar)
 def salvar_csv(leituras, caminho):
-    """Grava as leituras em um arquivo CSV (UTF-8, separado por vírgula)."""
-    caminho.parent.mkdir(parents=True, exist_ok=True)  # cria a pasta se não existir
+    caminho.parent.mkdir(parents=True, exist_ok=True)
     with open(caminho, "w", newline="", encoding="utf-8") as arquivo:
         escritor = csv.DictWriter(arquivo, fieldnames=["timestamp", "nivel_cm", "estacao"])
         escritor.writeheader()
         escritor.writerows(leituras)
 
 
+# Gera, salva e mostra um resumo do que foi criado
 def main():
-    """Gera as leituras, salva o CSV e mostra um pequeno resumo na tela."""
     leituras = gerar_leituras()
     salvar_csv(leituras, ARQUIVO_SAIDA)
 
@@ -99,7 +69,5 @@ def main():
     print(f"Nível mínimo: {min(niveis)} cm | máximo: {max(niveis)} cm")
 
 
-# Só executa main() quando o arquivo é rodado diretamente
-# (e não quando é importado por outro módulo, como nos testes).
 if __name__ == "__main__":
     main()

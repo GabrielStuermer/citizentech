@@ -1,26 +1,13 @@
-// Leituras de nível da água: conversão do CSV e validação.
-// Mesmas regras do Python (python/src/leitura.py).
-//
-// Formato de cada leitura dentro do app (camelCase, padrão do JavaScript):
-//   { timestamp: Date, nivelCm: number, estacao: string }
-// No arquivo e na API o nome é nivel_cm (contrato de dados); a conversão
-// acontece só aqui, na entrada dos dados.
-
-// Alcance físico do sensor HC-SR04 (cerca de 400 cm): fora disso é erro de leitura.
+// Leituras de nível: validação, leitura do CSV e filtros por tempo
 export const NIVEL_MINIMO_CM = 0
 export const NIVEL_MAXIMO_CM = 400
 
 const COLUNAS_OBRIGATORIAS = ['timestamp', 'nivel_cm', 'estacao']
 
-// Formato ISO aceito: AAAA-MM-DDTHH:MM(:SS), com fuso opcional (Z ou +03:00).
+// Data/hora ISO: AAAA-MM-DDTHH:MM[:SS[.ms]][Z ou ±HH:MM]
 const FORMATO_ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})?$/
 
-/**
- * Valida um registro bruto e devolve uma leitura pronta para uso.
- * @param {{timestamp?: string, nivel_cm?: string|number, estacao?: string}} bruto
- * @returns {{timestamp: Date, nivelCm: number, estacao: string}}
- * @throws {Error} com uma mensagem simples explicando o problema
- */
+// Valida uma leitura bruta; devolve { timestamp, nivelCm, estacao } ou lança erro com o motivo
 export function validarLeitura(bruto) {
   const textoData = String(bruto.timestamp ?? '').trim()
   const momento = new Date(textoData)
@@ -43,10 +30,7 @@ export function validarLeitura(bruto) {
   return { timestamp: momento, nivelCm: nivel, estacao }
 }
 
-/**
- * Ordena por data/hora e remove datas repetidas (fica a primeira).
- * @returns {{leituras: Array, erros: string[]}}
- */
+// Ordena por data e descarta datas repetidas (fica a primeira)
 export function organizarLeituras(leituras) {
   const ordenadas = [...leituras].sort((a, b) => a.timestamp - b.timestamp)
   const vistos = new Set()
@@ -64,27 +48,22 @@ export function organizarLeituras(leituras) {
   return { leituras: unicas, erros }
 }
 
-/**
- * Converte o texto de um CSV (contrato de dados) em leituras válidas.
- * Linhas inválidas são ignoradas e o motivo vai para a lista de erros.
- * @param {string} texto - conteúdo do arquivo CSV
- * @returns {{leituras: Array, erros: string[]}}
- * @throws {Error} se faltar alguma coluna obrigatória no cabeçalho
- */
+// Lê o texto do CSV; devolve { leituras válidas, erros de cada linha }
 export function lerCsv(texto) {
   const linhas = texto.split(/\r?\n/).filter((linha) => linha.trim() !== '')
   if (linhas.length === 0) return { leituras: [], erros: [] }
 
+  // Confere o cabeçalho
   const cabecalho = linhas[0].split(',').map((coluna) => coluna.trim())
   const faltando = COLUNAS_OBRIGATORIAS.filter((coluna) => !cabecalho.includes(coluna))
   if (faltando.length > 0) {
     throw new Error(`colunas obrigatórias ausentes: ${faltando.join(', ')}`)
   }
 
+  // Valida linha a linha; a inválida vira erro e as outras seguem
   const validas = []
   const erros = []
   linhas.slice(1).forEach((linha, indice) => {
-    // Monta um objeto { timestamp, nivel_cm, estacao } a partir das colunas.
     const valores = linha.split(',')
     const bruto = Object.fromEntries(cabecalho.map((coluna, i) => [coluna, valores[i]]))
     try {
@@ -98,12 +77,12 @@ export function lerCsv(texto) {
   return { leituras: organizadas.leituras, erros: [...erros, ...organizadas.erros] }
 }
 
-/** Só as leituras feitas até o momento informado (inclusive). */
+// Leituras até um momento (usado na simulação)
 export function leiturasAte(leituras, momento) {
   return leituras.filter((leitura) => leitura.timestamp <= momento)
 }
 
-/** Só as leituras das últimas `horas` horas antes da última leitura. */
+// Leituras das últimas N horas (usado no gráfico)
 export function ultimasHoras(leituras, horas) {
   if (leituras.length === 0) return []
   const fim = leituras.at(-1).timestamp.getTime()
@@ -111,12 +90,7 @@ export function ultimasHoras(leituras, horas) {
   return leituras.filter((leitura) => leitura.timestamp.getTime() >= inicio)
 }
 
-/**
- * A leitura está velha demais para confiar? (ex.: sensor sem internet)
- * @param {Date} momentoLeitura
- * @param {Date} agora
- * @param {number} limiteMin - minutos sem leitura nova para considerar desatualizado
- */
+// true se a última leitura tem mais de limiteMin minutos
 export function estaDesatualizada(momentoLeitura, agora, limiteMin = 30) {
   return agora.getTime() - momentoLeitura.getTime() > limiteMin * 60 * 1000
 }

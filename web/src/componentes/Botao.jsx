@@ -1,6 +1,4 @@
-// Botão padrão do app. Tamanho mínimo de toque de 48 px (bom para celular).
-// variante: 'primario' | 'secundario' | 'perigo'
-// carregando: mostra um ícone girando e impede cliques repetidos.
+// Botão padrão (primario, secundario, perigo) com estado "carregando"
 import { Icone } from './Icone.jsx'
 
 export function Botao({
@@ -11,7 +9,7 @@ export function Botao({
   disabled = false,
   className = '',
   children,
-  ...resto
+  ...resto // demais props (onClick, ref, aria-*) vão direto para o <button>
 }) {
   return (
     <button
@@ -21,6 +19,7 @@ export function Botao({
       aria-busy={carregando || undefined}
       {...resto}
     >
+      {/* Carregando: troca o ícone por um que gira e desativa o botão */}
       {carregando ? <Icone nome="carregando" className="icone--girando" /> : icone && <Icone nome={icone} />}
       <span>{children}</span>
     </button>

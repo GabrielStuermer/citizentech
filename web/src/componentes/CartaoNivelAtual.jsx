@@ -1,6 +1,4 @@
-// Cartão principal: o que o morador precisa saber AGORA.
-// Ordem pensada para quem está sob estresse: faixa e o que fazer primeiro,
-// depois o tempo até o crítico, e por fim os números de apoio.
+// Cartão principal: faixa, o que fazer, tempo até o crítico, nível e tendência
 import { Icone } from './Icone.jsx'
 import { IndicadorFaixa } from './IndicadorFaixa.jsx'
 import {
@@ -12,7 +10,7 @@ import {
   textoTendencia,
 } from '../utils/formatacao.js'
 
-/** Texto principal sobre o tempo até o nível crítico. */
+// Bloco do tempo: já atingiu, sem previsão ou "em cerca de X, por volta das HH:MM"
 function TempoAteCritico({ minutos, limiteCm, momentoLeitura }) {
   if (minutos === 0) {
     return <p className="cartao__tempo cartao__tempo--urgente">A água JÁ ATINGIU o nível crítico.</p>
@@ -35,9 +33,6 @@ function TempoAteCritico({ minutos, limiteCm, momentoLeitura }) {
   )
 }
 
-/**
- * @param {{status: ReturnType<import('../dominio/analise.js').statusAtual>, desatualizado?: boolean}} props
- */
 export function CartaoNivelAtual({ status, desatualizado = false }) {
   const { leitura, faixa, velocidadeCmH, tendencia, limiteCriticoCm, minutosAteCritico } = status
 
@@ -48,10 +43,12 @@ export function CartaoNivelAtual({ status, desatualizado = false }) {
         <IndicadorFaixa faixa={faixa} tamanho="grande" />
       </header>
 
+      {/* A orientação vem antes dos números */}
       <p className="cartao__mensagem">{faixa.mensagem}</p>
 
       <TempoAteCritico minutos={minutosAteCritico} limiteCm={limiteCriticoCm} momentoLeitura={leitura.timestamp} />
 
+      {/* Dados de apoio: nível, tendência, limite crítico e hora da leitura */}
       <dl className="cartao__dados">
         <div>
           <dt>Nível agora</dt>

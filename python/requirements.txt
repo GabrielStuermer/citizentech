@@ -1,3 +1,2 @@
-# O programa usa só a biblioteca padrão do Python (3.10 ou superior).
-# A única dependência externa é para rodar os testes:
+# O programa usa só a biblioteca padrão; o pytest é só para os testes
 pytest>=8.0

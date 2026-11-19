@@ -1,4 +1,4 @@
-// Testes das regras de negócio (sem React).
+// Testes das regras de negócio (faixas, leituras, análise, ocorrências) e paridade com o Python
 import { describe, expect, it } from 'vitest'
 import config from '@dados/config_alertas.json'
 import csvSimulado from '@dados/niveis_simulados.csv?raw'
@@ -16,7 +16,7 @@ import { ordenarPorData, validarOcorrencia } from './ocorrencias.js'
 const faixas = carregarFaixas(config)
 const INICIO = new Date('2026-11-04T00:00:00')
 
-/** Cria leituras artificiais a cada `intervaloMin` minutos. */
+// Cria uma série de leituras a cada 10 min a partir de uma lista de níveis
 function serie(niveis, intervaloMin = 10) {
   return niveis.map((nivelCm, i) => ({
     timestamp: new Date(INICIO.getTime() + i * intervaloMin * 60000),
@@ -85,9 +85,9 @@ describe('leituras', () => {
   })
 
   it('filtra por momento e pelas últimas horas', () => {
-    const leituras = serie([1, 2, 3, 4, 5, 6, 7]) // 0 a 60 min
+    const leituras = serie([1, 2, 3, 4, 5, 6, 7])
     expect(leiturasAte(leituras, new Date(INICIO.getTime() + 10 * 60000))).toHaveLength(2)
-    expect(ultimasHoras(leituras, 0.5)).toHaveLength(4) // 30, 40, 50, 60 min
+    expect(ultimasHoras(leituras, 0.5)).toHaveLength(4)
   })
 
   it('detecta leitura desatualizada', () => {
@@ -133,6 +133,7 @@ describe('análise', () => {
   })
 })
 
+// Mesmo CSV do Python tem que dar os mesmos números (110 min e 1 h 46 min)
 describe('paridade com o Python (mesmo CSV, mesmos números)', () => {
   const { leituras, erros } = lerCsv(csvSimulado)
 

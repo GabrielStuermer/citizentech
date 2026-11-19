@@ -1,9 +1,8 @@
-// Mensagem padrão para os estados da tela: carregando, sucesso, erro,
-// vazio (sem dados) e aviso. Sempre com ícone + texto, e anunciada pelo
-// leitor de tela (role="alert" para erro, role="status" para o resto).
+// Mensagem de estado (carregando, sucesso, erro, vazio, aviso) com ação opcional
 import { Botao } from './Botao.jsx'
 import { Icone } from './Icone.jsx'
 
+// Ícone usado em cada tipo de mensagem
 const ICONE_POR_TIPO = {
   carregando: 'carregando',
   sucesso: 'sucesso',
@@ -12,15 +11,8 @@ const ICONE_POR_TIPO = {
   aviso: 'atencao',
 }
 
-/**
- * @param {{
- *   tipo: 'carregando'|'sucesso'|'erro'|'vazio'|'aviso',
- *   titulo: string,
- *   children?: React.ReactNode,          texto de apoio / orientação
- *   acao?: {rotulo: string, onClick: () => void, icone?: string}
- * }} props
- */
 export function MensagemEstado({ tipo, titulo, children, acao }) {
+  // Erro é anunciado na hora pelo leitor de tela (alert); o resto, sem interromper (status)
   return (
     <div className={`mensagem mensagem--${tipo}`} role={tipo === 'erro' ? 'alert' : 'status'}>
       <Icone
@@ -31,6 +23,7 @@ export function MensagemEstado({ tipo, titulo, children, acao }) {
       <div className="mensagem__conteudo">
         <p className="mensagem__titulo">{titulo}</p>
         {children && <div className="mensagem__texto">{children}</div>}
+        {/* Botão opcional, ex.: "Tentar de novo" */}
         {acao && (
           <Botao variante="secundario" icone={acao.icone ?? 'recarregar'} onClick={acao.onClick}>
             {acao.rotulo}

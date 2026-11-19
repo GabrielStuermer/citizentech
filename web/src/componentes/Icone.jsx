@@ -1,9 +1,10 @@
-// Ícones desenhados em SVG, sem biblioteca externa (funcionam sem internet).
-// Por padrão são decorativos (aria-hidden): o texto ao lado é que informa.
-// Se o ícone estiver sozinho, passe `rotulo` para o leitor de tela ler.
+// Ícones em SVG desenhados no próprio código (funcionam sem internet)
 
-const PONTO = { strokeWidth: 3 } // traço curto e grosso que vira um "ponto"
+// Traço mais grosso para os "pontos" dos ícones (ex.: ponto do "!")
+const PONTO = { strokeWidth: 3 }
 
+// Desenho de cada ícone. As faixas usam formatos diferentes:
+// círculo (normal/atenção), triângulo (alerta) e octógono (crítico)
 const DESENHOS = {
   normal: (
     <>
@@ -106,9 +107,7 @@ const DESENHOS = {
   ),
 }
 
-/**
- * @param {{nome: keyof DESENHOS, tamanho?: number, rotulo?: string, className?: string}} props
- */
+// Com rótulo: o leitor de tela lê o ícone. Sem rótulo: é decorativo e fica oculto
 export function Icone({ nome, tamanho = 24, rotulo, className = '' }) {
   const acessibilidade = rotulo ? { role: 'img', 'aria-label': rotulo } : { 'aria-hidden': true }
   return (

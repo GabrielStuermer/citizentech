@@ -1,34 +1,31 @@
-// Formatação de números, datas e textos para o padrão brasileiro.
-// Só apresentação: nenhuma regra de negócio aqui.
-
+// Formatação de números e datas no padrão brasileiro
 const numero1Casa = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 const dataHora = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 const hora = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' })
 
-/** 201.8 -> "201,8 cm" */
+// 182.5 -> "182,5 cm"
 export function formatarNivel(cm) {
   return `${numero1Casa.format(cm)} cm`
 }
 
-/** 27.34 -> "+27,3 cm/h" */
+// 27.34 -> "+27,3 cm/h" ("|| 0" evita mostrar "-0,0")
 export function formatarVelocidade(cmPorHora) {
-  // Arredonda antes de decidir o sinal: -0,04 vira "0,0" (e não "-0,0").
-  const arredondado = Math.round(cmPorHora * 10) / 10 || 0 // "|| 0" troca -0 por 0
+  const arredondado = Math.round(cmPorHora * 10) / 10 || 0
   const sinal = arredondado > 0 ? '+' : ''
   return `${sinal}${numero1Casa.format(arredondado)} cm/h`
 }
 
-/** Date -> "05/11/2026 01:10" */
+// "05/11/2026 01:10"
 export function formatarDataHora(data) {
   return dataHora.format(data).replace(',', '')
 }
 
-/** Date -> "01:10" */
+// "01:10"
 export function formatarHora(data) {
   return hora.format(data)
 }
 
-/** 106.4 -> "1 h 46 min"; 45 -> "45 min" */
+// 106 -> "1 h 46 min"
 export function formatarDuracao(minutos) {
   const total = Math.round(minutos)
   const horas = Math.floor(total / 60)
@@ -37,7 +34,7 @@ export function formatarDuracao(minutos) {
   return `${horas} h ${String(resto).padStart(2, '0')} min`
 }
 
-/** Tendência em texto simples. */
+// Texto que aparece na tela para cada tendência
 export function textoTendencia(tendencia) {
   return {
     subindo: 'Subindo',
@@ -47,7 +44,7 @@ export function textoTendencia(tendencia) {
   }[tendencia]
 }
 
-/** Date -> "2026-11-05T01:10" (formato do <input type="datetime-local">) */
+// Date -> "AAAA-MM-DDTHH:MM" (formato do <input type="datetime-local">, hora local)
 export function paraCampoDataHora(data) {
   const doisDigitos = (n) => String(n).padStart(2, '0')
   return `${data.getFullYear()}-${doisDigitos(data.getMonth() + 1)}-${doisDigitos(data.getDate())}` +

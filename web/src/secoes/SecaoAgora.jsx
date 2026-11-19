@@ -1,5 +1,4 @@
-// Seção "Agora": situação atual da água + controle da simulação.
-// Decide qual estado mostrar (carregando, erro, sem dados, sem conexão, sucesso).
+// Seção "Agora": situação atual da água e controle da simulação
 import { CartaoNivelAtual } from '../componentes/CartaoNivelAtual.jsx'
 import { ControleSimulacao } from '../componentes/ControleSimulacao.jsx'
 import { MensagemEstado } from '../componentes/MensagemEstado.jsx'
@@ -7,12 +6,12 @@ import { statusAtual } from '../dominio/analise.js'
 import { estaDesatualizada } from '../dominio/leituras.js'
 import { formatarDataHora } from '../utils/formatacao.js'
 
-// Sem leitura nova há mais que isso, o dado do sensor é considerado desatualizado.
 const LIMITE_DESATUALIZADO_MIN = 30
 
 export function SecaoAgora({ dados, visiveis, faixas, simulacao }) {
   const ehSimulada = dados.fonte === 'simulada'
 
+  // Estado: carregando
   if (dados.status === 'carregando') {
     return (
       <section id="agora" className="secao" aria-label="Situação agora">
@@ -21,6 +20,7 @@ export function SecaoAgora({ dados, visiveis, faixas, simulacao }) {
     )
   }
 
+  // Estado: erro (sem dados e sem cópia salva)
   if (dados.status === 'erro') {
     return (
       <section id="agora" className="secao" aria-label="Situação agora">
@@ -35,6 +35,7 @@ export function SecaoAgora({ dados, visiveis, faixas, simulacao }) {
     )
   }
 
+  // Estado: vazio (canal ainda sem leituras)
   if (visiveis.length === 0) {
     return (
       <section id="agora" className="secao" aria-label="Situação agora">
@@ -45,13 +46,14 @@ export function SecaoAgora({ dados, visiveis, faixas, simulacao }) {
     )
   }
 
+  // Estado: sucesso. Dado real com mais de 30 min é marcado como desatualizado
   const status = statusAtual(visiveis, faixas)
-  // Só faz sentido para dados ao vivo; os simulados têm datas fixas.
   const desatualizado = !ehSimulada && estaDesatualizada(status.leitura.timestamp, new Date(), LIMITE_DESATUALIZADO_MIN)
 
   return (
     <section id="agora" className="secao secao--agora" aria-label="Situação agora">
       <div className="agora__principal">
+        {/* Avisos acima do cartão: sem conexão, sensor parado, leituras ignoradas */}
         {dados.doCache && (
           <MensagemEstado
             tipo="aviso"
@@ -73,6 +75,7 @@ export function SecaoAgora({ dados, visiveis, faixas, simulacao }) {
         <CartaoNivelAtual status={status} desatualizado={desatualizado} />
       </div>
 
+      {/* A régua de tempo só aparece com dados simulados */}
       {ehSimulada && (
         <ControleSimulacao
           leituras={dados.leituras}

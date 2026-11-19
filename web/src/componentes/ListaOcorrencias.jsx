@@ -1,9 +1,9 @@
-// Lista das ocorrências de alagamento (a mais recente primeiro).
-// Sem ocorrências, mostra uma mensagem de "sem dados" explicando o que fazer.
+// Lista de ocorrências, ou mensagem de lista vazia
 import { ItemOcorrencia } from './ItemOcorrencia.jsx'
 import { MensagemEstado } from './MensagemEstado.jsx'
 
 export function ListaOcorrencias({ ocorrencias, idEmEdicao, excluindo, bloqueado, onEditar, onExcluir }) {
+  // Estado: vazio
   if (ocorrencias.length === 0) {
     return (
       <MensagemEstado tipo="vazio" titulo="Nenhuma ocorrência registrada ainda.">

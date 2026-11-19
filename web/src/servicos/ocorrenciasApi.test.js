@@ -1,4 +1,4 @@
-// Testes do módulo de API: simulamos o fetch para não depender de servidor.
+// Testes da API de ocorrências (com fetch falso) e do cache local
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   ErroApi,
@@ -9,7 +9,7 @@ import {
 } from './ocorrenciasApi.js'
 import { lerDoCache, salvarNoCache } from './cache.js'
 
-/** Troca o fetch global por uma versão falsa que devolve `resposta`. */
+// Troca o fetch do navegador por um falso que devolve a resposta pedida
 function simularFetch(resposta) {
   const falso = vi.fn().mockResolvedValue({
     ok: resposta.status >= 200 && resposta.status < 300,
@@ -20,6 +20,7 @@ function simularFetch(resposta) {
   return falso
 }
 
+// Devolve o fetch original depois de cada teste
 afterEach(() => vi.unstubAllGlobals())
 
 describe('ocorrenciasApi', () => {

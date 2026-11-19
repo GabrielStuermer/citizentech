@@ -1,9 +1,10 @@
-// Informa se o aparelho está com internet, e atualiza quando isso muda.
+// Diz se o aparelho está com internet e atualiza quando isso muda
 import { useEffect, useState } from 'react'
 
 export function useConexao() {
   const [online, setOnline] = useState(() => navigator.onLine)
 
+  // Ouve os eventos do navegador e remove os ouvintes ao desmontar
   useEffect(() => {
     const ficouOnline = () => setOnline(true)
     const ficouOffline = () => setOnline(false)

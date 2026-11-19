@@ -1,30 +1,24 @@
-# Script do PlatformIO, executado depois da configuração da plataforma ("post:").
-#
-# Remove a criação do arquivo firmware.map pelo linker.
-# Motivo: o linker do ESP32 não consegue criar esse arquivo quando o caminho
-# da pasta tem acento (ex.: "Área de Trabalho") e a compilação falha.
-# O .map é só um relatório do uso de memória: o firmware não precisa dele.
-#
-# Também remove o "--cref" (tabela de referências do .map): sem o arquivo,
-# o linker imprimiria essa tabela enorme na tela.
-from SCons.Util import flatten  # noqa: E402
+# Script do PlatformIO: tira a geração do firmware.map do linker.
+# O linker do ESP32 falha ao criar esse arquivo quando o caminho tem acento
+# ("Área de Trabalho"). O .map é só um relatório; o firmware não precisa dele.
+from SCons.Util import flatten
 
-Import("env")  # noqa: F821 (variável fornecida pelo PlatformIO)
+Import("env")  # variável fornecida pelo PlatformIO
 
-# A lista de opções pode ter listas dentro dela: "flatten" deixa tudo num nível só.
+# Opções do linker, numa lista só (sem listas dentro de listas)
 opcoes = flatten(env.get("LINKFLAGS", []))
 
 novas_opcoes = []
 pular_proxima = False
 for opcao in opcoes:
     texto = str(opcao)
-    if pular_proxima:           # é o caminho do .map, que vem logo depois da opção
+    if pular_proxima:  # caminho do .map, que vem logo depois de "--Map"
         pular_proxima = False
         continue
     if texto == "-Wl,--Map":
         pular_proxima = True
         continue
-    if "--cref" in texto:
+    if "--cref" in texto:  # tabela de referências do .map: sem o arquivo, não serve
         continue
     novas_opcoes.append(opcao)
 

@@ -1,10 +1,9 @@
-// Roda antes de cada arquivo de teste.
-// Adiciona verificações como expect(elemento).toBeInTheDocument().
+// Preparação dos testes: matchers extras (toBeInTheDocument etc.)
 import '@testing-library/jest-dom/vitest'
 import { afterEach } from 'vitest'
 import { cleanup } from '@testing-library/react'
 
-// Desmonta os componentes renderizados depois de cada teste.
+// Depois de cada teste: desmonta a tela e limpa o cache local
 afterEach(() => {
   cleanup()
   localStorage.clear()

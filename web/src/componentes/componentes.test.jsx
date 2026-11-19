@@ -1,4 +1,4 @@
-// Testes dos componentes: verificam o que a pessoa vê e faz na tela.
+// Testes de componentes: o que a pessoa vê e faz na tela
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -13,6 +13,7 @@ import { MensagemEstado } from './MensagemEstado.jsx'
 
 const faixas = carregarFaixas(config)
 
+// Cria leituras a cada 10 min a partir de uma lista de níveis
 function serie(niveis) {
   const inicio = new Date('2026-11-05T00:00:00').getTime()
   return niveis.map((nivelCm, i) => ({ timestamp: new Date(inicio + i * 600000), nivelCm, estacao: 'Teste' }))
@@ -42,7 +43,7 @@ describe('MensagemEstado', () => {
 
 describe('CartaoNivelAtual', () => {
   it('mostra faixa, mensagem e tempo até o crítico', () => {
-    const status = statusAtual(serie([180, 185, 190, 195, 200, 205, 210]), faixas) // 30 cm/h
+    const status = statusAtual(serie([180, 185, 190, 195, 200, 205, 210]), faixas)
     render(<CartaoNivelAtual status={status} />)
     expect(screen.getByText('Alerta')).toBeInTheDocument()
     expect(screen.getByText(faixas[2].mensagem)).toBeInTheDocument()
@@ -107,7 +108,7 @@ describe('ListaOcorrencias', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Excluir' }))
     expect(onExcluir).not.toHaveBeenCalled()
-    expect(screen.getByRole('button', { name: 'Não' })).toHaveFocus() // opção segura
+    expect(screen.getByRole('button', { name: 'Não' })).toHaveFocus()
 
     await userEvent.click(screen.getByRole('button', { name: 'Sim, excluir' }))
     expect(onExcluir).toHaveBeenCalledWith('1')

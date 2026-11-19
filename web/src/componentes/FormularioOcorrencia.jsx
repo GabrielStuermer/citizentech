@@ -1,9 +1,4 @@
-// Formulário para registrar ou editar uma ocorrência de alagamento.
-//
-// - Valida com as regras de dominio/ocorrencias.js e mostra o erro em cada campo.
-// - Ao errar, leva o foco para o primeiro campo com problema.
-// - Para trocar entre "nova" e "editar", o componente pai muda a `key`,
-//   o que recria o formulário já com os valores certos.
+// Formulário para criar ou editar uma ocorrência, com validação por campo
 import { useRef, useState } from 'react'
 import { Botao } from './Botao.jsx'
 import { CampoFormulario } from './CampoFormulario.jsx'
@@ -17,33 +12,27 @@ import {
 } from '../dominio/ocorrencias.js'
 import { paraCampoDataHora } from '../utils/formatacao.js'
 
+// Ordem dos campos na tela: o foco vai para o primeiro com erro
 const ORDEM_CAMPOS = ['rua', 'gravidade', 'descricao', 'data']
 
-/**
- * @param {{
- *   ocorrencia?: object|null,   ocorrência sendo editada (null = nova)
- *   enviando: boolean,
- *   bloqueado?: boolean,         true sem conexão com a API
- *   onSalvar: (dados) => Promise<boolean>,
- *   onCancelar?: () => void
- * }} props
- */
 export function FormularioOcorrencia({ ocorrencia = null, enviando, bloqueado = false, onSalvar, onCancelar }) {
   const editando = ocorrencia !== null
+  // Editando: começa com os dados da ocorrência. Nova: começa com a data/hora de agora
   const [valores, setValores] = useState(() =>
     editando ? { ...ocorrenciaVazia(), ...ocorrencia } : { ...ocorrenciaVazia(), data: paraCampoDataHora(new Date()) },
   )
   const [erros, setErros] = useState({})
   const formularioRef = useRef(null)
 
-  /** Atualiza um campo e apaga o erro dele assim que a pessoa corrige. */
+  // Atualiza um campo e apaga o erro dele assim que a pessoa corrige
   function mudarCampo(campo, valor) {
     setValores((atuais) => ({ ...atuais, [campo]: valor }))
     if (erros[campo]) setErros((atuais) => ({ ...atuais, [campo]: undefined }))
   }
 
+  // Valida; com erro, mostra e foca o primeiro campo; sem erro, envia
   async function aoEnviar(evento) {
-    evento.preventDefault()
+    evento.preventDefault() // não recarrega a página
     const resultado = validarOcorrencia(valores)
     if (!resultado.valido) {
       setErros(resultado.erros)
@@ -53,7 +42,7 @@ export function FormularioOcorrencia({ ocorrencia = null, enviando, bloqueado = 
     }
     setErros({})
     const deuCerto = await onSalvar(normalizarOcorrencia(valores))
-    if (deuCerto && !editando) {
+    if (deuCerto && !editando) { // criou: limpa o formulário
       setValores({ ...ocorrenciaVazia(), data: paraCampoDataHora(new Date()) })
     }
   }
@@ -66,6 +55,7 @@ export function FormularioOcorrencia({ ocorrencia = null, enviando, bloqueado = 
         {editando ? 'Editar ocorrência' : 'Avisar sobre um alagamento'}
       </h3>
 
+      {/* Resumo dos erros, anunciado pelo leitor de tela */}
       {qtdErros > 0 && (
         <p className="formulario__resumo-erros" role="alert">
           <Icone nome="erro" />
@@ -86,6 +76,7 @@ export function FormularioOcorrencia({ ocorrencia = null, enviando, bloqueado = 
         )}
       </CampoFormulario>
 
+      {/* Gravidade: grupo de opções (radio) com texto, não só cor */}
       <fieldset
         className={`campo campo--grupo ${erros.gravidade ? 'campo--com-erro' : ''}`}
         aria-describedby={erros.gravidade ? 'gravidade-erro' : undefined}
@@ -140,6 +131,7 @@ export function FormularioOcorrencia({ ocorrencia = null, enviando, bloqueado = 
         )}
       </CampoFormulario>
 
+      {/* Enviar fica desativado sem conexão; Cancelar só aparece na edição */}
       <div className="formulario__acoes">
         <Botao type="submit" icone="sucesso" carregando={enviando} disabled={bloqueado}>
           {editando ? 'Salvar alterações' : 'Enviar aviso'}

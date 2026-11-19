@@ -1,15 +1,4 @@
-"""
-Menu de terminal do AlertaCheia.
-
-Mostra ao morador o resumo dos dados, o status atual da água e o tempo
-estimado até o nível crítico. Este é o único módulo que usa print() e
-input(): a lógica fica em leitura.py, faixas.py e analise.py.
-
-Como executar (a partir da raiz do repositório):
-    python python/src/menu.py
-    python python/src/menu.py --arquivo python/exemplos/niveis_com_erros.csv
-"""
-
+# Menu de terminal do AlertaCheia (único módulo que usa print/input).
 import argparse
 import sys
 from datetime import datetime, timedelta
@@ -26,26 +15,22 @@ from analise import (
 from faixas import carregar_faixas
 from leitura import ler_csv
 
-# Arquivos padrão: os do núcleo de dados compartilhado (pasta dados/)
+# Arquivos padrão, na pasta dados/ da raiz
 RAIZ = Path(__file__).resolve().parents[2]
 CSV_PADRAO = RAIZ / "dados" / "niveis_simulados.csv"
 CONFIG_PADRAO = RAIZ / "dados" / "config_alertas.json"
 
-# Símbolo em texto para cada faixa: a informação nunca depende só de cor
+# Símbolo de cada faixa: a informação não depende só de cor
 ICONES = {"normal": "[ OK ]", "atencao": "[ ! ]", "alerta": "[ !! ]", "critico": "[ !!! ]"}
 
 
-# ---------------------------------------------------------------
-# Funções de formatação (deixam os números fáceis de ler)
-# ---------------------------------------------------------------
-
+# Data no formato brasileiro (dd/mm/aaaa hh:mm)
 def formatar_data(momento):
-    """Ex.: datetime(2026, 11, 5, 1, 10) -> '05/11/2026 01:10'."""
     return momento.strftime("%d/%m/%Y %H:%M")
 
 
+# Minutos em texto ("1 h 46 min"), com os casos especiais
 def formatar_minutos(minutos):
-    """Transforma minutos em texto simples. Ex.: 106.4 -> '1 h 46 min'."""
     if minutos is None:
         return "sem previsão (a água não está subindo)"
     if minutos == 0:
@@ -57,17 +42,13 @@ def formatar_minutos(minutos):
     return f"{horas} h {resto:02d} min"
 
 
+# Faixa com símbolo e nome (ex.: "[ !! ] ALERTA")
 def formatar_faixa(faixa):
-    """Ex.: '[ !! ] ALERTA'."""
     return f"{ICONES[faixa['chave']]} {faixa['rotulo'].upper()}"
 
 
-# ---------------------------------------------------------------
-# Telas do menu
-# ---------------------------------------------------------------
-
+# Opção 1: resumo, contagem por faixa e indicador de impacto
 def mostrar_resumo(leituras, faixas, erros):
-    """Opção 1: números gerais da série e o indicador de impacto."""
     resumo = resumo_estatistico(leituras)
     print("\n--- RESUMO DOS DADOS ---")
     print(f"Estação: {leituras[0].estacao}")
@@ -93,8 +74,8 @@ def mostrar_resumo(leituras, faixas, erros):
               f" ({antecedencia['minutos']:.0f} minutos para agir)")
 
 
+# Opção 2: situação da última leitura
 def mostrar_status(leituras, faixas):
-    """Opção 2: o que o morador precisa saber agora."""
     status = status_atual(leituras, faixas)
     leitura = status["leitura"]
     faixa = status["faixa"]
@@ -112,8 +93,8 @@ def mostrar_status(leituras, faixas):
           f"{formatar_minutos(status['minutos_ate_critico'])}")
 
 
+# Opção 3: tempo até o crítico, mostrando a conta feita
 def mostrar_tempo_estimado(leituras, faixas):
-    """Opção 3: a estimativa até o crítico, com a conta explicada."""
     status = status_atual(leituras, faixas)
     leitura = status["leitura"]
     limite = status["limite_critico_cm"]
@@ -123,9 +104,11 @@ def mostrar_tempo_estimado(leituras, faixas):
     print("\n--- TEMPO ESTIMADO ATÉ O NÍVEL CRÍTICO ---")
     print(f"Nível atual: {leitura.nivel_cm:.1f} cm | nível crítico: {limite:.0f} cm")
 
+    # Já está no crítico
     if minutos == 0:
         print("A água JÁ ESTÁ no nível crítico. Saia agora para um local seguro.")
         return
+    # Água estável ou descendo: sem previsão
     if minutos is None:
         texto_velocidade = "sem dados" if velocidade is None else f"{velocidade:+.1f} cm/h"
         print(f"Velocidade na última hora: {texto_velocidade}")
@@ -133,6 +116,7 @@ def mostrar_tempo_estimado(leituras, faixas):
         print("Continue acompanhando: a situação pode mudar.")
         return
 
+    # Subindo: mostra a conta e o horário previsto
     falta = limite - leitura.nivel_cm
     previsao = leitura.timestamp + timedelta(minutes=minutos)
     print(f"Faltam: {falta:.1f} cm")
@@ -143,8 +127,8 @@ def mostrar_tempo_estimado(leituras, faixas):
     print("Atenção: a estimativa supõe que a água continue subindo no mesmo ritmo.")
 
 
+# Opção 4: mostra o que o sistema diria em outro momento da série
 def simular_momento(leituras, faixas):
-    """Opção 4: 'volta no tempo' e mostra o que o sistema diria naquela hora."""
     print("\n--- SIMULAR OUTRO MOMENTO ---")
     print(f"Os dados vão de {formatar_data(leituras[0].timestamp)}"
           f" até {formatar_data(leituras[-1].timestamp)}.")
@@ -158,6 +142,7 @@ def simular_momento(leituras, faixas):
         print("Formato inválido. Use dia/mês/ano hora:minuto, por exemplo 05/11/2026 01:10.")
         return
 
+    # Usa só as leituras até o momento escolhido
     ate_ali = leituras_ate(leituras, momento)
     if not ate_ali:
         print("Não há leituras até esse momento. Escolha uma data dentro do período acima.")
@@ -167,8 +152,8 @@ def simular_momento(leituras, faixas):
     mostrar_tempo_estimado(ate_ali, faixas)
 
 
+# Opção 5: linhas do CSV que foram ignoradas e o motivo
 def mostrar_erros(erros):
-    """Opção 5: linhas do arquivo que foram ignoradas e o motivo."""
     print("\n--- LINHAS IGNORADAS NA LEITURA ---")
     if not erros:
         print("Nenhuma: todas as linhas do arquivo são válidas.")
@@ -176,10 +161,6 @@ def mostrar_erros(erros):
     for erro in erros:
         print(f"  - {erro}")
 
-
-# ---------------------------------------------------------------
-# Programa principal
-# ---------------------------------------------------------------
 
 MENU = """
 ========================================
@@ -194,13 +175,13 @@ MENU = """
 
 
 def main():
-    """Carrega os arquivos e repete o menu até o usuário escolher sair."""
+    # Permite trocar o CSV e o JSON pela linha de comando (--arquivo, --config)
     parser = argparse.ArgumentParser(description="AlertaCheia: alerta de subida da água")
     parser.add_argument("--arquivo", default=CSV_PADRAO, help="CSV com as leituras")
     parser.add_argument("--config", default=CONFIG_PADRAO, help="JSON com as faixas de alerta")
     argumentos = parser.parse_args()
 
-    # Carrega os dados; se algo der errado, explica e encerra sem travar
+    # Carrega os dados; se o arquivo faltar ou estiver errado, explica e sai
     try:
         leituras, erros = ler_csv(argumentos.arquivo)
         faixas = carregar_faixas(argumentos.config)
@@ -222,6 +203,7 @@ def main():
     if erros:
         print(f"{len(erros)} linha(s) inválida(s) foram ignoradas. Veja a opção 5.")
 
+    # Cada opção do menu aponta para uma função
     acoes = {
         "1": lambda: mostrar_resumo(leituras, faixas, erros),
         "2": lambda: mostrar_status(leituras, faixas),
@@ -230,11 +212,12 @@ def main():
         "5": lambda: mostrar_erros(erros),
     }
 
+    # Laço do menu até o usuário escolher 0 (Ctrl+C também sai)
     while True:
         print(MENU)
         try:
             opcao = input("Escolha uma opção: ").strip()
-        except (EOFError, KeyboardInterrupt):  # Ctrl+C ou fim da entrada
+        except (EOFError, KeyboardInterrupt):
             opcao = "0"
 
         if opcao == "0":

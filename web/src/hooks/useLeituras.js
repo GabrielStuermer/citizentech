@@ -1,17 +1,12 @@
-// Carrega as leituras de nível e controla o estado da tela:
-// 'carregando' | 'sucesso' | 'erro'.
-// Se a fonte falhar (ex.: sem internet), usa a última lista salva no aparelho
-// e marca doCache = true, para a tela avisar que pode estar desatualizada.
+// Busca as leituras de nível e controla carregando / sucesso / erro / cache
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { buscarLeituras, fonteAtual } from '../servicos/leiturasFonte.js'
 import { lerDoCache, salvarNoCache } from '../servicos/cache.js'
 
 const CHAVE_CACHE = 'leituras'
-// Só para a fonte ThingSpeak (dados ao vivo). O ESP32 envia a cada 20 s,
-// então buscar a cada 15 s mostra cada envio novo logo que ele chega.
-const ATUALIZAR_A_CADA_MS = 15 * 1000
+const ATUALIZAR_A_CADA_MS = 15 * 1000 // ThingSpeak: busca de novo a cada 15 s
 
-// O localStorage só guarda texto: Date vira texto ao salvar e volta a ser Date ao ler.
+// O localStorage só guarda texto: datas viram string e voltam a ser Date
 const paraSalvar = (leituras) => leituras.map((l) => ({ ...l, timestamp: l.timestamp.toISOString() }))
 const doSalvo = (leituras) => leituras.map((l) => ({ ...l, timestamp: new Date(l.timestamp) }))
 
@@ -19,17 +14,18 @@ export function useLeituras() {
   const [estado, setEstado] = useState({
     status: 'carregando',
     leituras: [],
-    errosDeLinha: [], // linhas inválidas ignoradas
-    erro: null,       // falha ao buscar a fonte
+    errosDeLinha: [],
+    erro: null,
     doCache: false,
     salvoEm: null,
   })
 
-  // Evita que uma resposta antiga sobrescreva uma mais nova.
+  // Número da última busca: ignora respostas antigas que chegarem atrasadas
   const ultimaBusca = useRef(0)
 
   const carregar = useCallback(async () => {
     const minhaBusca = ++ultimaBusca.current
+    // Só mostra "carregando" se ainda não há nada na tela
     setEstado((anterior) => ({ ...anterior, status: anterior.leituras.length ? anterior.status : 'carregando' }))
 
     try {
@@ -39,6 +35,7 @@ export function useLeituras() {
       setEstado({ status: 'sucesso', leituras, errosDeLinha: erros, erro: null, doCache: false, salvoEm: new Date() })
     } catch (erro) {
       if (minhaBusca !== ultimaBusca.current) return
+      // Falhou: usa a cópia salva no aparelho, se houver
       const salvo = lerDoCache(CHAVE_CACHE)
       if (salvo) {
         setEstado({ status: 'sucesso', leituras: doSalvo(salvo.valor), errosDeLinha: [], erro, doCache: true, salvoEm: salvo.salvoEm })
@@ -48,6 +45,7 @@ export function useLeituras() {
     }
   }, [])
 
+  // Carrega ao abrir; no ThingSpeak, continua atualizando sozinho
   useEffect(() => {
     carregar()
     if (fonteAtual() !== 'thingspeak') return undefined

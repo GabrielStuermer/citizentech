@@ -1,10 +1,4 @@
-// Estado e operações do CRUD de ocorrências.
-//
-// status: 'carregando' | 'sucesso' | 'erro'
-// operacao: o que está sendo enviado agora ('criando', 'atualizando', 'excluindo')
-// aviso: mensagem de resultado da última operação ({tipo, texto, orientacao})
-// doCache: true quando a lista veio do aparelho porque a API não respondeu
-//          (nesse caso só é possível consultar; criar/editar/excluir ficam bloqueados)
+// Estado do CRUD de ocorrências: lista, carregamento, erros, cache e avisos
 import { useCallback, useEffect, useState } from 'react'
 import * as api from '../servicos/ocorrenciasApi.js'
 import { lerDoCache, salvarNoCache } from '../servicos/cache.js'
@@ -16,22 +10,22 @@ export function useOcorrencias() {
   const [ocorrencias, setOcorrencias] = useState([])
   const [status, setStatus] = useState('carregando')
   const [erro, setErro] = useState(null)
-  const [doCache, setDoCache] = useState(false)
+  const [doCache, setDoCache] = useState(false)   // lista veio do aparelho, não da API
   const [salvoEm, setSalvoEm] = useState(null)
-  const [operacao, setOperacao] = useState(null)
-  const [aviso, setAviso] = useState(null)
+  const [operacao, setOperacao] = useState(null)  // 'criando', 'atualizando' ou 'excluindo'
+  const [aviso, setAviso] = useState(null)        // mensagem de sucesso ou erro da última operação
 
-  /** Muda a lista a partir da versão mais recente, sempre em ordem de data. */
+  // Altera a lista e mantém a ordem (mais recente primeiro)
   function alterarLista(transformar) {
     setOcorrencias((anterior) => ordenarPorData(transformar(anterior)))
   }
 
-  // Sempre que a lista vinda da API muda, guarda uma cópia no aparelho.
-  // (Um único lugar salva o cache: fica mais fácil de entender e de testar.)
+  // Toda lista boa vinda da API é salva no aparelho
   useEffect(() => {
     if (status === 'sucesso' && !doCache) salvarNoCache(CHAVE_CACHE, ocorrencias)
   }, [ocorrencias, status, doCache])
 
+  // Busca a lista na API; se falhar, mostra a cópia salva
   const carregar = useCallback(async () => {
     setStatus('carregando')
     setErro(null)
@@ -58,10 +52,7 @@ export function useOcorrencias() {
     carregar()
   }, [carregar])
 
-  /**
-   * Executa uma operação de escrita com o tratamento de erro padrão.
-   * @returns {Promise<boolean>} true se deu certo
-   */
+  // Roda uma operação e mostra o resultado; devolve true se deu certo
   async function executar(nomeOperacao, acao, textoSucesso) {
     setOperacao(nomeOperacao)
     setAviso(null)
@@ -71,14 +62,14 @@ export function useOcorrencias() {
       return true
     } catch (falha) {
       setAviso({ tipo: 'erro', texto: falha.message, orientacao: falha.orientacao })
-      // Se a ocorrência sumiu do servidor, a lista da tela está velha: recarrega.
-      if (falha.tipo === 'nao-encontrado') carregar()
+      if (falha.tipo === 'nao-encontrado') carregar() // já foi excluída: recarrega a lista
       return false
     } finally {
       setOperacao(null)
     }
   }
 
+  // Criar, atualizar e excluir: chama a API e atualiza a lista na tela
   const criar = (dados) =>
     executar('criando', async () => {
       const nova = await api.criarOcorrencia(dados)

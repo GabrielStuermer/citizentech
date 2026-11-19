@@ -1,11 +1,6 @@
-// Selo da faixa de alerta: cor + ícone + texto (nunca só cor).
-// Cada faixa tem um ícone de formato diferente (círculo, triângulo,
-// octógono), o que ajuda quem não distingue cores.
+// Selo da faixa: cor + ícone de formato diferente + texto (nunca só cor)
 import { Icone } from './Icone.jsx'
 
-/**
- * @param {{faixa: {chave: string, rotulo: string}, tamanho?: 'normal'|'grande'}} props
- */
 export function IndicadorFaixa({ faixa, tamanho = 'normal' }) {
   return (
     <span className={`faixa faixa--${faixa.chave} faixa--${tamanho}`}>

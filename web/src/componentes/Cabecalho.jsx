@@ -1,4 +1,4 @@
-// Cabeçalho: nome do app, bairro, menu de seções e situação da conexão.
+// Topo da página: nome do app, bairro, situação da conexão e menu das seções
 import { Icone } from './Icone.jsx'
 
 export function Cabecalho({ estacao, online }) {
@@ -10,11 +10,13 @@ export function Cabecalho({ estacao, online }) {
           <p className="cabecalho__local">{estacao} · Porto Alegre</p>
         </div>
 
+        {/* Conectado / Sem internet, com ícone e texto */}
         <p className={`conexao conexao--${online ? 'online' : 'offline'}`}>
           <Icone nome={online ? 'online' : 'offline'} tamanho={20} />
           <span>{online ? 'Conectado' : 'Sem internet'}</span>
         </p>
 
+        {/* Links para as seções da página */}
         <nav className="cabecalho__menu" aria-label="Seções">
           <ul>
             <li><a href="#agora">Agora</a></li>

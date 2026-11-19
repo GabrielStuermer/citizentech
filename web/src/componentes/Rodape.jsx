@@ -1,4 +1,4 @@
-// Rodapé: telefones de emergência (clicáveis no celular) e origem dos dados.
+// Rodapé: telefones de emergência (com um toque) e origem dos dados
 export function Rodape({ fonte }) {
   return (
     <footer className="rodape">
@@ -8,6 +8,7 @@ export function Rodape({ fonte }) {
           <li><a href="tel:199"><strong>199</strong> Defesa Civil</a></li>
           <li><a href="tel:193"><strong>193</strong> Bombeiros</a></li>
         </ul>
+        {/* Deixa claro se os dados são do sensor ou simulados */}
         <p className="rodape__fonte">
           {fonte === 'thingspeak'
             ? 'Dados do sensor do AlertaCheia, publicados no ThingSpeak.'

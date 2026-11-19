@@ -1,28 +1,27 @@
-// Configuração do Vite (servidor de desenvolvimento e build) e do Vitest (testes).
+// Configuração do Vite (servidor/build) e do Vitest (testes)
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Caminho absoluto da pasta dados/ compartilhada (fica fora de web/).
+// Pasta dados/ da raiz: a mesma usada pelo Python e pelo ESP32
 const pastaDados = fileURLToPath(new URL('../dados', import.meta.url))
 
 export default defineConfig({
   plugins: [react()],
 
+  // Permite importar com '@dados/arquivo'
   resolve: {
-    // Atalho: import x from '@dados/config_alertas.json'
-    // Assim o app lê os MESMOS arquivos que o Python e o ESP32, sem cópias.
     alias: { '@dados': pastaDados },
   },
 
+  // Libera o servidor para ler arquivos fora de web/
   server: {
-    // O Vite só serve arquivos de dentro do projeto; liberamos a pasta pai
-    // para ele conseguir ler ../dados durante o desenvolvimento.
     fs: { allow: ['..'] },
   },
 
+  // Testes rodam num navegador simulado (jsdom)
   test: {
-    environment: 'jsdom', // simula o navegador nos testes de componentes
+    environment: 'jsdom',
     setupFiles: ['./src/testes/setup.js'],
   },
 })

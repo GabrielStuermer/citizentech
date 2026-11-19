@@ -1,11 +1,6 @@
-/* =========================================================
-   AlertaCheia: estilos
-   Organização: 1) tokens  2) base  3) layout  4) componentes
-   Mobile-first: estilos para celular primeiro; telas maiores em @media.
-   Contraste: todas as combinações de texto/fundo têm pelo menos 4,5:1 (WCAG AA).
-   ========================================================= */
+/* Estilos do AlertaCheia: mobile-first (celular primeiro, telas maiores com @media) */
 
-/* ---------- 1) Tokens (cores, espaços, tipografia) ---------- */
+/* ---------- Cores e medidas (tokens). Contraste mínimo de 4,5:1 nos textos ---------- */
 :root {
   --cor-fundo: #f2f5f8;
   --cor-superficie: #ffffff;
@@ -17,7 +12,7 @@
   --cor-perigo: #a51616;
   --cor-foco: #ffd23f;
 
-  /* Faixas de alerta: fundo claro + borda forte + texto escuro (crítico é invertido) */
+  /* Cores de cada faixa: fundo, borda forte e texto */
   --normal-fundo: #e3f4e8;   --normal-forte: #1b7a3a;   --normal-texto: #0c4520;
   --atencao-fundo: #fff3c4;  --atencao-forte: #9a6500;  --atencao-texto: #533600;
   --alerta-fundo: #ffe0c7;   --alerta-forte: #c04e00;   --alerta-texto: #692800;
@@ -33,13 +28,13 @@
   --fonte: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* ---------- 2) Base ---------- */
+/* ---------- Base ---------- */
 *,
 *::before,
 *::after { box-sizing: border-box; }
 
 html {
-  font-size: 112.5%; /* 18 px: letras grandes para leitura sob estresse */
+  font-size: 112.5%; /* letra base de 18 px */
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
 }
@@ -50,14 +45,14 @@ body {
   line-height: 1.5;
   color: var(--cor-texto);
   background: var(--cor-fundo);
-  overflow-wrap: break-word; /* textos longos quebram em vez de criar rolagem horizontal */
+  overflow-wrap: break-word;
 }
 
 h1, h2, h3, h4, p { margin: 0; }
 img, svg { max-width: 100%; }
 a { color: var(--cor-primaria); text-underline-offset: 0.15em; }
 
-/* Foco sempre visível: anel escuro + halo amarelo (aparece em fundo claro e escuro) */
+/* ---------- Acessibilidade: foco visível, texto só para leitor de tela, pular conteúdo ---------- */
 :focus-visible {
   outline: 3px solid var(--cor-texto);
   outline-offset: 2px;
@@ -85,12 +80,13 @@ main:focus { outline: none; }
 }
 .pular-para-conteudo:focus { top: var(--espaco-1); }
 
+/* Respeita quem pediu menos movimento no sistema */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
-/* ---------- 3) Layout ---------- */
+/* ---------- Layout geral e seções ---------- */
 .container {
   width: 100%;
   max-width: 1120px;
@@ -107,13 +103,12 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .secao--agora { display: grid; gap: var(--espaco-3); }
 .agora__principal { display: grid; gap: var(--espaco-2); align-content: start; }
 
+/* Telas largas: cartão e simulação lado a lado */
 @media (min-width: 900px) {
   .secao--agora { grid-template-columns: 2fr 1fr; align-items: start; }
 }
 
-/* ---------- 4) Componentes ---------- */
-
-/* Cabecalho */
+/* ---------- Cabeçalho e situação da conexão ---------- */
 .cabecalho { background: var(--cor-primaria); color: #fff; }
 .cabecalho__conteudo {
   display: flex;
@@ -156,7 +151,7 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .conexao--online { background: var(--normal-fundo); color: var(--normal-texto); }
 .conexao--offline { background: var(--cor-foco); color: var(--cor-texto); }
 
-/* Botao */
+/* ---------- Botões (mínimo 48 px de altura para o toque) ---------- */
 .botao {
   display: inline-flex;
   align-items: center;
@@ -179,11 +174,12 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .botao--perigo { background: var(--cor-perigo); color: #fff; }
 .botao--perigo:hover:not(:disabled) { background: #7d0a0e; }
 
+/* ---------- Ícones ---------- */
 .icone { flex-shrink: 0; }
 .icone--girando { animation: girar 1s linear infinite; }
 @keyframes girar { to { transform: rotate(360deg); } }
 
-/* MensagemEstado */
+/* ---------- Mensagens de estado (carregando, sucesso, erro, aviso, vazio) ---------- */
 .mensagem {
   display: flex;
   gap: 0.75rem;
@@ -202,7 +198,7 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .mensagem--aviso { border-color: var(--atencao-forte); background: var(--atencao-fundo); color: var(--atencao-texto); }
 .mensagem--vazio { border-color: var(--cor-borda); color: var(--cor-texto-suave); }
 
-/* IndicadorFaixa */
+/* ---------- Selo da faixa ---------- */
 .faixa {
   display: inline-flex;
   align-items: center;
@@ -219,7 +215,7 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .faixa--alerta { background: var(--alerta-fundo); border-color: var(--alerta-forte); color: var(--alerta-texto); }
 .faixa--critico { background: var(--critico-fundo); border-color: var(--critico-forte); color: var(--critico-texto); }
 
-/* CartaoNivelAtual */
+/* ---------- Cartão "Situação da água" (a borda de cima muda com a faixa) ---------- */
 .cartao {
   display: grid;
   gap: var(--espaco-2);
@@ -248,7 +244,7 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .cartao__velocidade { font-weight: 400; color: var(--cor-texto-suave); }
 .cartao__desatualizado { color: var(--cor-perigo); }
 
-/* ControleSimulacao */
+/* ---------- Simulação ---------- */
 .simulacao { display: grid; gap: var(--espaco-2); padding: var(--espaco-3); border-radius: var(--raio); background: var(--cor-superficie); box-shadow: var(--sombra); }
 .simulacao__titulo { font-size: 1.15rem; }
 .simulacao__explicacao { color: var(--cor-texto-suave); }
@@ -256,7 +252,7 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .simulacao__regua { display: grid; gap: 0.4rem; }
 .simulacao input[type='range'] { width: 100%; min-height: 44px; accent-color: var(--cor-primaria); }
 
-/* GraficoHistorico */
+/* ---------- Gráfico do histórico e tabela de dados ---------- */
 .grafico { margin: 0; padding: var(--espaco-3); border-radius: var(--raio); background: var(--cor-superficie); box-shadow: var(--sombra); }
 .grafico__legenda { display: grid; gap: 0.25rem; margin-bottom: var(--espaco-2); }
 .grafico__titulo { font-weight: 700; }
@@ -273,7 +269,7 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
   fill: var(--cor-texto);
   font-size: 13px;
   font-weight: 700;
-  paint-order: stroke;          /* contorno branco atrás do texto: legível sobre a linha */
+  paint-order: stroke;
   stroke: var(--cor-superficie);
   stroke-width: 4px;
 }
@@ -300,6 +296,7 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .grafico__tabela table { width: 100%; border-collapse: collapse; }
 .grafico__tabela th, .grafico__tabela td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #e1e7ec; text-align: left; }
 
+/* ---------- Indicador de impacto ---------- */
 .destaque-impacto {
   display: grid;
   gap: 0.25rem;
@@ -311,7 +308,7 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 }
 .destaque-impacto__numero { font-size: 2.4rem; font-weight: 800; line-height: 1.1; }
 
-/* Formulário e campos */
+/* ---------- Ocorrências: formulário e lista (lado a lado em telas largas) ---------- */
 .ocorrencias__grade { display: grid; gap: var(--espaco-3); margin-top: var(--espaco-2); }
 @media (min-width: 900px) {
   .ocorrencias__grade { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
@@ -322,6 +319,7 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .formulario__resumo-erros { display: flex; gap: 0.5rem; align-items: center; padding: 0.75rem; border-radius: var(--raio); background: #fdeaea; color: #6b0b0e; font-weight: 700; }
 .formulario__acoes { display: flex; flex-wrap: wrap; gap: var(--espaco-1); }
 
+/* Campos do formulário */
 .campo { display: grid; gap: 0.35rem; }
 .campo--grupo { margin: 0; padding: 0; border: 0; min-width: 0; }
 .campo__rotulo { font-weight: 700; padding: 0; }
@@ -344,20 +342,21 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .campo--com-erro input,
 .campo--com-erro textarea { border-color: var(--cor-perigo); border-width: 3px; }
 
+/* Opções de gravidade (radio) */
 .opcao {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   min-height: 48px;
   padding: 0.4rem 0.75rem;
-  border: 2px solid var(--cor-texto-suave); /* contorno de controle: contraste de pelo menos 3:1 */
+  border: 2px solid var(--cor-texto-suave);
   border-radius: 8px;
   cursor: pointer;
 }
 .opcao:has(input:checked) { border-color: var(--cor-primaria); background: #e6eef4; font-weight: 700; }
 .opcao input { width: 1.25rem; height: 1.25rem; accent-color: var(--cor-primaria); flex-shrink: 0; }
 
-/* Lista de ocorrências */
+/* Lista e cada ocorrência */
 .ocorrencias__lista { display: grid; gap: var(--espaco-2); }
 .ocorrencias__lista-titulo { font-size: 1.2rem; }
 .lista-ocorrencias { display: grid; gap: var(--espaco-2); list-style: none; margin: 0; padding: 0; }
@@ -369,12 +368,13 @@ main { padding-block: var(--espaco-3) var(--espaco-4); }
 .ocorrencia__acoes { display: flex; flex-wrap: wrap; gap: var(--espaco-1); }
 .ocorrencia__confirmacao { display: grid; gap: 0.5rem; padding: 0.75rem; border-radius: 8px; background: #fdeaea; color: #6b0b0e; font-weight: 700; }
 
+/* Selo de gravidade */
 .gravidade { padding: 0.15rem 0.6rem; border: 2px solid; border-radius: 999px; font-size: 0.85rem; font-weight: 800; }
 .gravidade--baixa { background: var(--atencao-fundo); border-color: var(--atencao-forte); color: var(--atencao-texto); }
 .gravidade--media { background: var(--alerta-fundo); border-color: var(--alerta-forte); color: var(--alerta-texto); }
 .gravidade--alta { background: var(--critico-fundo); border-color: var(--critico-forte); color: var(--critico-texto); }
 
-/* Rodape */
+/* ---------- Rodapé e telefones de emergência ---------- */
 .rodape { padding-block: var(--espaco-3); background: var(--cor-texto); color: #fff; }
 .rodape a { color: #fff; }
 .rodape__titulo { font-size: 1.1rem; margin-bottom: var(--espaco-1); }
