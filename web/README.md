@@ -2,7 +2,7 @@
 
 App para o morador do **Humaitá (Porto Alegre)** acompanhar o nível da água, entender o alerta e saber **quanto tempo falta até o nível crítico**. Também permite registrar **ocorrências de alagamento** (CRUD).
 
-Integrante: Luis Gabriel Pinheiro Stuermer, RM [preencher].
+Integrante: Luis Gabriel Pinheiro Stuermer, RM 572183 ([GitHub](https://github.com/GabrielStuermer)).
 
 > ⚠️ As leituras de nível são **simuladas** (arquivo [`dados/niveis_simulados.csv`](../dados/niveis_simulados.csv)). As ocorrências de exemplo são fictícias. Os limites das faixas são provisórios, a validar com fonte pública.
 
@@ -157,7 +157,7 @@ VITE_THINGSPEAK_CANAL=<ID do canal>
 VITE_THINGSPEAK_CHAVE_LEITURA=<Read API Key>
 ```
 
-O app passa a buscar `field1` (nível em cm) a cada 60 s. Use só a chave de **leitura**: tudo que começa com `VITE_` fica visível no navegador. O endereço da API de leitura está marcado como [a validar na documentação atual do ThingSpeak].
+O app passa a buscar `field1` (nível em cm) a cada 15 s. As entradas sem nível, que são os comandos remotos do field4, são ignoradas. Use só a chave de **leitura**: tudo que começa com `VITE_` fica visível no navegador. A leitura foi testada com o canal real do ESP32 (canal 3586259).
 
 ## Testes
 

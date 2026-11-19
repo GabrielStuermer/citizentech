@@ -23,7 +23,8 @@ o que foi feito, por quê, como testar, decisões e pendências.
 - **Botão Rede** com três modos (normal, MQTT cortado, WiFi cortado), para demonstrar as desconexões.
 - **Credenciais** em `src/secrets.h`, fora do Git. O repositório guarda só o modelo `secrets.example.h`.
 - **Ajuste de compilação** (`scripts/sem_mapa.py`): o linker do ESP32 falhava porque o caminho da pasta tem acento ("Área de Trabalho").
-- `edge/README.md` e `edge/roteiro-video.md`.
+- `edge/README.md`.
+- **Dashboard:** o app web passou a ler o canal do ThingSpeak (dados reais do ESP32), atendendo ao dashboard do Edge pela disciplina de Front-end.
 
 ### Como testar
 Abra a pasta `edge/` no VS Code, compile (✓) e rode **Wokwi: Start Simulator**. Teste feito em 18/11/2026:
@@ -36,7 +37,7 @@ Abra a pasta `edge/` no VS Code, compile (✓) e rode **Wokwi: Start Simulator**
 ### Decisões e pendências
 - Envio a cada 20 s, por causa do limite de 15 s do plano gratuito do ThingSpeak.
 - Comandos enviados com o dispositivo desconectado se perdem (limitação documentada).
-- Falta gravar o vídeo, seguindo o `edge/roteiro-video.md`.
+- Vídeo de demonstração gravado em 19/11/2026 e entregue na tarefa do Teams.
 
 ---
 

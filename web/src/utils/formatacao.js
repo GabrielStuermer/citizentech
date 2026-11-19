@@ -12,8 +12,10 @@ export function formatarNivel(cm) {
 
 /** 27.34 -> "+27,3 cm/h" */
 export function formatarVelocidade(cmPorHora) {
-  const sinal = cmPorHora > 0 ? '+' : ''
-  return `${sinal}${numero1Casa.format(cmPorHora)} cm/h`
+  // Arredonda antes de decidir o sinal: -0,04 vira "0,0" (e não "-0,0").
+  const arredondado = Math.round(cmPorHora * 10) / 10 || 0 // "|| 0" troca -0 por 0
+  const sinal = arredondado > 0 ? '+' : ''
+  return `${sinal}${numero1Casa.format(arredondado)} cm/h`
 }
 
 /** Date -> "05/11/2026 01:10" */

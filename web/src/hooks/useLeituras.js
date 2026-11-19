@@ -7,7 +7,9 @@ import { buscarLeituras, fonteAtual } from '../servicos/leiturasFonte.js'
 import { lerDoCache, salvarNoCache } from '../servicos/cache.js'
 
 const CHAVE_CACHE = 'leituras'
-const ATUALIZAR_A_CADA_MS = 60 * 1000 // só para a fonte ThingSpeak (dados ao vivo)
+// Só para a fonte ThingSpeak (dados ao vivo). O ESP32 envia a cada 20 s,
+// então buscar a cada 15 s mostra cada envio novo logo que ele chega.
+const ATUALIZAR_A_CADA_MS = 15 * 1000
 
 // O localStorage só guarda texto: Date vira texto ao salvar e volta a ser Date ao ler.
 const paraSalvar = (leituras) => leituras.map((l) => ({ ...l, timestamp: l.timestamp.toISOString() }))

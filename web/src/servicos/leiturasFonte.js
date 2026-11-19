@@ -53,6 +53,9 @@ async function buscarDoThingSpeak() {
   const validas = []
   const erros = []
   for (const registro of corpo.feeds ?? []) {
+    // Entradas sem nível (field1 vazio) não são leituras: são os comandos
+    // remotos enviados pelo field4. Ignoramos sem contar como erro.
+    if (registro.field1 === null || registro.field1 === undefined || registro.field1 === '') continue
     try {
       validas.push(validarLeitura({
         timestamp: registro.created_at,

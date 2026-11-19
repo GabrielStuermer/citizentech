@@ -1,7 +1,7 @@
 # AlertaCheia: Python (Computational Thinking with Python)
 
 Parte em Python da CitizenTech **AlertaCheia** (Global Solution FIAP 2026.2).
-Integrante: Luis Gabriel Pinheiro Stuermer, RM [preencher].
+Integrante: Luis Gabriel Pinheiro Stuermer, RM 572183 ([GitHub](https://github.com/GabrielStuermer)).
 
 ## (a) Problema da cidade
 

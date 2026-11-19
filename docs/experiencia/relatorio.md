@@ -12,7 +12,7 @@
 
 | Nome completo | RM |
 |---|---|
-| Luis Gabriel Pinheiro Stuermer | [preencher] |
+| Luis Gabriel Pinheiro Stuermer | 572183 |
 
 <div style="page-break-after: always;"></div>
 

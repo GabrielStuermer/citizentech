@@ -10,7 +10,7 @@
 
 ## O que foi feito com apoio da IA
 
-- Comentários explicando o código.
+- Comentários explicando cada parte do código.
 - Tarefas repetitivas
 - Ajuda na instalação de APIs e instalação da extensão do Wokwi no vscode para realizar a parte da matéria de edgecomputing.
 - Decoração e organização do Readme.

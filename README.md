@@ -11,7 +11,7 @@
 | **Cidadão beneficiado** | Morador de Humaitá que vive em área alagável e precisa de tempo para salvar seus bens e sair em segurança |
 | **Problema, em uma frase** | O aviso sobre a subida da água chega tarde demais para o morador proteger seus pertences e sua segurança. |
 | **Como funciona** | O sistema recebe o nível da água ao longo do tempo, calcula a velocidade de subida, estima quanto tempo falta até o nível crítico e mostra o alerta para o morador. |
-| **Link do repositório** | [preencher] |
+| **Link do repositório** | https://github.com/GabrielStuermer/citizentech |
 | **Indicador de impacto** | Minutos de antecedência do alerta antes do nível crítico |
 | **ODS conectados** | 11, 13, 9 e 3 (detalhes abaixo) |
 

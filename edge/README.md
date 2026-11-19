@@ -12,7 +12,7 @@ O dispositivo:
 
 | Nome completo | RM |
 |---|---|
-| Luis Gabriel Pinheiro Stuermer | [preencher] |
+| Luis Gabriel Pinheiro Stuermer | 572183 |
 
 ## Contexto
 
@@ -34,7 +34,8 @@ Os limites das faixas são os mesmos de [`dados/config_alertas.json`](../dados/c
 | [`wokwi.toml`](wokwi.toml) | Diz ao Wokwi onde está o firmware compilado |
 | [`platformio.ini`](platformio.ini) | Placa, framework e bibliotecas (PlatformIO) |
 | [`scripts/sem_mapa.py`](scripts/sem_mapa.py) | Ajuste de compilação: evita o erro do linker quando o caminho da pasta tem acento (ex.: "Área de Trabalho") |
-| [`roteiro-video.md`](roteiro-video.md) | Passo a passo do vídeo de demonstração |
+
+**Vídeo de demonstração:** entregue como arquivo na tarefa da disciplina no Teams. Ele mostra o sensor mudando de faixa, o display e o dashboard atualizando, o comando remoto e a desconexão do WiFi e do MQTT.
 
 ## Circuito
 
@@ -120,7 +121,9 @@ Em todos os modos, LEDs e buzzer continuam funcionando.
 | field3 | `alarme` | ESP32 | 0 desligado, 1 intermitente, 2 contínuo, 3 silenciado, 4 teste remoto |
 | field4 | `comando` | Usuário (remoto) | Comando para o dispositivo (tabela abaixo) |
 
-**Persistência e dashboard:** cada envio vira uma linha no canal, e o ThingSpeak guarda o histórico e mostra um gráfico por campo na aba *Private View*. O app web do projeto ([`web/`](../web/)) também pode ler este canal (módulo opcional `leiturasFonte.js`).
+**Persistência:** cada envio vira uma linha no canal, e o ThingSpeak guarda o histórico (gráficos na aba *Private View*).
+
+**Dashboard:** feito no **app web** do projeto ([`web/`](../web/)), da disciplina de Front-end, que lê este canal a cada 15 s e mostra nível, faixa, tendência, minutos até o crítico e o gráfico. Para ligar, crie o `web/.env.local` com `VITE_FONTE_LEITURAS=thingspeak`, o ID do canal e a Read API Key (veja `web/.env.example`).
 
 ### Comandos remotos (field4)
 
